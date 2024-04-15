@@ -6,7 +6,7 @@ sed -i '2i export PYTHONPATH="/root/micromamba/envs/python_libs/lib/python3.12/s
 sed -i '2i export PYTHONPATH="/root/micromamba/envs/python_libs/lib/python3.12/site-packages"' /root/.pixi/bin/jupyter-lab
 sed -i '2i export PYTHONPATH="/root/micromamba/envs/python_libs/lib/python3.12/site-packages"' /root/.pixi/bin/jupyter-server
 echo "unset PYTHONPATH" >> /root/.bashrc
-echo '.libPaths("~/micromamba/envs/r_libs/lib/R/library")' >> /root/.Rprofile
+echo '.libPaths("/root/micromamba/envs/r_libs/lib/R/library")' >> /root/.Rprofile
 
 # pixi global currently gives it wrappers all lowercase names, so we need to make symlinks for R and Rscript
 if [ ! -e "${HOME}/.pixi/bin/R" ]; then
