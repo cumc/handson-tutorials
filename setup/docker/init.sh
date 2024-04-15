@@ -5,6 +5,7 @@ sed -i '2i export PYTHONPATH="/root/micromamba/envs/python_libs/lib/python3.12/s
 sed -i '2i export PYTHONPATH="/root/micromamba/envs/python_libs/lib/python3.12/site-packages"' /root/.pixi/bin/python3
 sed -i '2i export PYTHONPATH="/root/micromamba/envs/python_libs/lib/python3.12/site-packages"' /root/.pixi/bin/jupyter-lab
 sed -i '2i export PYTHONPATH="/root/micromamba/envs/python_libs/lib/python3.12/site-packages"' /root/.pixi/bin/jupyter-server
+sed -i '2i export PYTHONPATH="/root/micromamba/envs/python_libs/lib/python3.12/site-packages"' /root/.pixi/bin/sos
 echo "unset PYTHONPATH" >> /root/.bashrc
 echo '.libPaths("/root/micromamba/envs/r_libs/lib/R/library")' >> /root/.Rprofile
 

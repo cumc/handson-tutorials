@@ -59,7 +59,6 @@ dependencies:
   - widgetsnbextension
   - xlrd
   - python=3.12
-  - sos
   - sos-bash
   - sos-notebook
   - sos-python
