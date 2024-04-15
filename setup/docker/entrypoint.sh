@@ -1,8 +1,8 @@
 #!/bin/bash
+set -e
+curl -o /tmp/course_entrypoint.sh https://raw.githubusercontent.com/cumc/handson-tutorials/main/setup/course_entrypoint.sh
+chmod +x /tmp/course_entrypoint.sh
+bash /tmp/course_entrypoint.sh
 
-curl -o /tmp/jn_entrypoint.sh https://raw.githubusercontent.com/yiweizh-memverge/statgen-courses/master/setup/MMCloud/jn_entrypoint.sh
-chmod +x /tmp/jn_entrypoint.sh
-bash /tmp/jn_entrypoint.sh
-
-cd /root/statgen-courses/
+cd /root/handson-tutorials/
 jupyter-lab
