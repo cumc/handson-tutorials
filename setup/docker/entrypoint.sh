@@ -5,4 +5,4 @@ chmod +x /tmp/course_entrypoint.sh
 bash /tmp/course_entrypoint.sh
 
 cd /root/handson-tutorials/
-jupyter-lab
+PYDEVD_DISABLE_FILE_VALIDATION=1 jupyter-lab
