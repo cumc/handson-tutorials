@@ -5,6 +5,7 @@ sed -i '2i export PYTHONPATH="/root/micromamba/envs/python_libs/lib/python3.12/s
 sed -i '2i export PYTHONPATH="/root/micromamba/envs/python_libs/lib/python3.12/site-packages"' /root/.pixi/bin/python3
 sed -i '2i export PYTHONPATH="/root/micromamba/envs/python_libs/lib/python3.12/site-packages"' /root/.pixi/bin/jupyter-lab
 sed -i '2i export PYTHONPATH="/root/micromamba/envs/python_libs/lib/python3.12/site-packages"' /root/.pixi/bin/jupyter-server
+sed -i '2i export PYTHONPATH="/root/micromamba/envs/python_libs/lib/python3.12/site-packages"' /root/.pixi/bin/sos
 echo "unset PYTHONPATH" >> /root/.bashrc
 echo '.libPaths("/root/micromamba/envs/r_libs/lib/R/library")' >> /root/.Rprofile
 
@@ -16,8 +17,6 @@ fi
 if [ ! -e "${HOME}/.pixi/bin/Rscript" ]; then
   ln -sf "${HOME}/.pixi/bin/rscript" "${HOME}/.pixi/bin/Rscript"
 fi
-
-ln -s ${HOME}/micromamba/envs/python_libs/bin/sos ${HOME}/.pixi/bin/sos
 
 # Register Juypter kernels
 find /root/micromamba/envs/python_libs/share/jupyter/kernels/ -maxdepth 1 -mindepth 1 -type d | \
