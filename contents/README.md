@@ -1,1 +1,1 @@
-# Credits to each tutorial
+# Credits to tutorials
