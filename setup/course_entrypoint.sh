@@ -34,4 +34,4 @@ AWS_ACCESS_KEY_ID=$BUCKET_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$BUCKET_SECRET_KEY aw
 chmod +x /usr/local/bin/*.pl
 
 # Fix plink.multivariate
-mv /root/handson-tutorials/contents/misc/plink.multivariate /usr/local/bin && chmod +x /usr/local/bin/plink.multivariate
+mv /root/handson-tutorials/contents/archive/plink.multivariate /usr/local/bin && chmod +x /usr/local/bin/plink.multivariate
