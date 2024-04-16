@@ -16,6 +16,7 @@ dependencies:
   - r-corrplot
   - r-devtools
   - r-flashpcar
+  - r-ggplot2
   - r-gplots
   - r-gtools
   - r-hudson
@@ -23,6 +24,8 @@ dependencies:
   - r-irkernel
   - r-languageserver
   - r-mediation
+  - r-mendelianrandomization
+  - r-mrinstruments
   - r-pacman
   - r-pecotmr
   - r-qqman
