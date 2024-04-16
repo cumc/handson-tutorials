@@ -17,6 +17,7 @@ jupyter_server
 king
 ldstore
 micromamba
+nbconvert-core
 notebook
 parallel
 perl
