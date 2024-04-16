@@ -7,6 +7,14 @@ plink\
  --sex\
  --linear\
  --out Trait1
+ 
+plink\
+ --bfile pleiotropy_exercise\
+ --pheno pleiotropy_exercise_phenotypes.txt\
+ --pheno-name Trait2\
+ --sex\
+ --linear\
+ --out Trait2
 
 grep 'TEST' Trait1.assoc.linear > Trait1_snp.assoc.linear
 grep 'ADD' Trait1.assoc.linear >> Trait1_snp.assoc.linear
@@ -20,12 +28,12 @@ grep 'ADD' Trait2.assoc.linear >> Trait2_snp.assoc.linear
 library(hudson)
 dat1<-read.table("Trait1_snp.assoc.linear",header=T)
 dat2<-read.table("Trait2_snp.assoc.linear",header=T)
-names(dat1_snps)<-c("CHR", "SNP", "POS", "A1", "TEST", "NMISS", "BETA", "STAT", "pvalue")
-names(dat2_snps)<-(names(dat1_snps)
-gmirror(top=dat1_snps, bottom=dat2_snps, tline=5e-08, bline=5e-08,
-+ toptitle="Trait11", bottomtitle = "Trait2",
-+ highlight_p = c(0.00000005,0.00000005), highlighter="green",
-+ file = 'pleiotropy_hudson', res = 300, type = 'pdf')
+names(dat1)<-c("CHR", "SNP", "POS", "A1", "TEST", "NMISS", "BETA", "STAT", "pvalue")
+names(dat2)<-(names(dat1))
+gmirror(top=dat1, bottom=dat2, tline=5e-08, bline=5e-08,
+    toptitle="Trait1", bottomtitle = "Trait2",
+    highlight_p = c(0.00000005,0.00000005), highlighter="green",
+    file = 'pleiotropy_hudson', res = 300, type = 'pdf')
 
 Trait1 <- read.table(“Trait1_snp.assoc.linear”, header = T)
 Trait2 <- read.table(“Trait2_snp.assoc.linear”, header = T)
