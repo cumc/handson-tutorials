@@ -3,6 +3,7 @@ bcftools
 bedtools
 bgenix
 cassi
+curl
 ensembl-vep
 fastlmmc
 finemap
@@ -17,6 +18,7 @@ jupyter_server
 king
 ldstore
 micromamba
+nbconvert-core
 notebook
 parallel
 perl
@@ -28,3 +30,5 @@ r-base=4.3
 regenie
 sos
 snpsift
+tree
+unzip
