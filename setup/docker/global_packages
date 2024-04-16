@@ -3,6 +3,7 @@ bcftools
 bedtools
 bgenix
 cassi
+curl
 ensembl-vep
 fastlmmc
 finemap
@@ -29,3 +30,5 @@ r-base=4.3
 regenie
 sos
 snpsift
+tree
+unzip
