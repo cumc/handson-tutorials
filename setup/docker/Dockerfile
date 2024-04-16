@@ -38,9 +38,6 @@ RUN bash /tmp/init.sh
 # Run some customized fixes
 RUN bash /tmp/fixes.sh
 
-# Clean up
-RUN rm -rf /tmp/*
-
 COPY entrypoint.sh /home/jovyan/entrypoint.sh
 RUN chmod +x /home/jovyan/entrypoint.sh
 ENV PYDEVD_DISABLE_FILE_VALIDATION=1
