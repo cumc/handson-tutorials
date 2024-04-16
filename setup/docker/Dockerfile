@@ -39,7 +39,6 @@ RUN bash /tmp/init.sh
 RUN bash /tmp/fixes.sh
 
 COPY entrypoint.sh /home/jovyan/entrypoint.sh
-RUN chmod +x /home/jovyan/entrypoint.sh
 ENV PYDEVD_DISABLE_FILE_VALIDATION=1
 WORKDIR /home/jovyan
-CMD ["/home/jovyan/entrypoint.sh"]
+CMD ["/bin/bash", "/home/jovyan/entrypoint.sh"]
