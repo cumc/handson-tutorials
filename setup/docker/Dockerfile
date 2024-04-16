@@ -44,4 +44,5 @@ RUN rm -rf /tmp/*
 COPY entrypoint.sh /home/jovyan/entrypoint.sh
 RUN chmod +x /home/jovyan/entrypoint.sh
 ENV PYDEVD_DISABLE_FILE_VALIDATION=1
+WORKDIR /home/jovyan
 CMD ["/home/jovyan/entrypoint.sh"]
