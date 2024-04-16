@@ -9,11 +9,11 @@ RUN useradd --no-log-init --create-home --shell /bin/bash --uid 1000 --no-user-g
 USER jovyan
 
 # Copy over configs and environments
-COPY r_libs.yml /tmp
-COPY python_libs.yml /tmp
-COPY global_packages /tmp
-COPY init.sh /tmp
-COPY fixes.sh /tmp
+COPY --chown=jovyan r_libs.yml /tmp
+COPY --chown=jovyan python_libs.yml /tmp
+COPY --chown=jovyan global_packages /tmp
+COPY --chown=jovyan init.sh /tmp
+COPY --chown=jovyan fixes.sh /tmp
 
 RUN mkdir -p /home/jovyan/.config/pixi && \
     echo 'default_channels = ["dnachun", "conda-forge", "bioconda"]' > /home/jovyan/.config/pixi/config.toml
@@ -38,7 +38,10 @@ RUN bash /tmp/init.sh
 # Run some customized fixes
 RUN bash /tmp/fixes.sh
 
-COPY entrypoint.sh /home/jovyan/entrypoint.sh
+# Clean up
+RUN rm -rf /tmp/*
+
+COPY  --chown=jovyan --chmod=755 entrypoint.sh /home/jovyan/entrypoint.sh
 ENV PYDEVD_DISABLE_FILE_VALIDATION=1
 WORKDIR /home/jovyan
 CMD ["/bin/bash", "/home/jovyan/entrypoint.sh"]
