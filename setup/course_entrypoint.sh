@@ -30,10 +30,10 @@ find "$repo_dir/contents" -type f -name "*.ipynb" | parallel -j $(nproc) "jupyte
 
 
 # Sync the contents directory
-AWS_ACCESS_KEY_ID=$BUCKET_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$BUCKET_SECRET_KEY aws s3 sync s3://opcenter-bucket-ada686a0-ccdb-11ee-b922-02ebafc2e5cf/tutorial_data /root/handson-tutorials/contents
+AWS_ACCESS_KEY_ID=$BUCKET_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$BUCKET_SECRET_KEY aws s3 sync s3://opcenter-bucket-ada686a0-ccdb-11ee-b922-02ebafc2e5cf/tutorial_data /home/jovyan/handson-tutorials/contents
 
 # Sync the annovar software
-(AWS_ACCESS_KEY_ID=$BUCKET_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$BUCKET_SECRET_KEY aws s3 sync s3://opcenter-bucket-ada686a0-ccdb-11ee-b922-02ebafc2e5cf/annovar_software/ /usr/local/bin --exclude "*" --include "*.pl" && chmod +x /usr/local/bin/*.pl) || (echo -e "\033[1;31mWarning: Cannot install ANNOVAR program due to license restriction. Exercise involving ANNOVAR annotations will not work unless you manually install ANNOVAR to the /usr/local/bin folder of the tutorials.\033[0m" && true)
+(AWS_ACCESS_KEY_ID=$BUCKET_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$BUCKET_SECRET_KEY aws s3 sync s3://opcenter-bucket-ada686a0-ccdb-11ee-b922-02ebafc2e5cf/annovar_software/ /home/jovyan/.pixi/bin --exclude "*" --include "*.pl" && chmod +x /home/jovyan/.pixi/bin/*.pl) || (echo -e "\033[1;31mWarning: Cannot install ANNOVAR program due to license restriction. Exercise involving ANNOVAR annotations will not work unless you manually install ANNOVAR to the /home/jovyan/.pixi/bin folder of the tutorials.\033[0m" && true)
 
 # Fix plink.multivariate
-mv /root/handson-tutorials/contents/archive/plink.multivariate /usr/local/bin && chmod +x /usr/local/bin/plink.multivariate
+mv /home/jovyan/handson-tutorials/contents/archive/plink.multivariate /home/jovyan/.pixi/bin && chmod +x /home/jovyan/.pixi/bin/plink.multivariate
