@@ -1,6 +1,6 @@
 #PLINK_data_QC_V2.pdf:
 
-cd ~/work/Plink_DataQC
+cd ./Plink_DataQC
 
 plink --file GWAS
 plink --file GWAS --mind 0.10 --recode --out GWAS_clean_mind
@@ -55,7 +55,7 @@ plink --file GWAS_clean3 --exclude HWE_out.txt --recode --out GWAS_clean4
 #GWAS_Data_Controlling_for_Substructure_V2.pdf:
 
 
-cd ~/work/Plink_substructure
+cd ./Plink_substructure
 
 plink --file GWAS_clean4 --genome --cluster --mds-plot 10
 
