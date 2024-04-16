@@ -11,8 +11,14 @@ dependencies:
   - r-base=4.3
   - r-bigsnpr
   - r-biocmanager
+  - r-bitops
+  - r-catools
+  - r-corrplot
   - r-devtools
   - r-flashpcar
+  - r-gplots
+  - r-gtools
+  - r-hudson
   - r-igraph
   - r-irkernel
   - r-languageserver
@@ -23,10 +29,5 @@ dependencies:
   - r-rgl
   - r-rmtstat
   - r-tidyverse
-  - r-hudson
-  - r-corrplot
-  - r-gplots
-  - r-bitops
-  - r-gtools
-  - r-catools
-
+  - r-twosamplemr
+  
