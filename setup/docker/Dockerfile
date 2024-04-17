@@ -42,7 +42,7 @@ RUN bash /tmp/fixes.sh
 RUN rm -rf /tmp/*
 
 COPY  --chown=jovyan --chmod=755 entrypoint.sh /home/jovyan/entrypoint.sh
-COPY  --chown=jovyan --chmod=644 .synapseConfig /home/jovyan/entrypoint.sh
+COPY  --chown=jovyan --chmod=644 .synapseConfig /home/jovyan/.synapseConfig
 ENV PYDEVD_DISABLE_FILE_VALIDATION=1
 WORKDIR /home/jovyan
 CMD ["/bin/bash", "/home/jovyan/entrypoint.sh"]
