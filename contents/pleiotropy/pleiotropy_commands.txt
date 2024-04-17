@@ -35,8 +35,8 @@ gmirror(top=dat1, bottom=dat2, tline=5e-08, bline=5e-08,
     highlight_p = c(0.00000005,0.00000005), highlighter="green",
     file = 'pleiotropy_hudson', res = 300, type = 'pdf')
 
-Trait1 <- read.table(“Trait1_snp.assoc.linear”, header = T)
-Trait2 <- read.table(“Trait2_snp.assoc.linear”, header = T)
+Trait1 <- read.table("Trait1_snp.assoc.linear", header = T)
+Trait2 <- read.table("Trait2_snp.assoc.linear", header = T)
 SigTrait1 <- subset(Trait1, P<0.00000005)
 SigTrait2 <- subset(Trait2, P<0.00000005)
 intersect(SigTrait1$SNP, SigTrait2$SNP)

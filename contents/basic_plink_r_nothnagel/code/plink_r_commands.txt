@@ -106,7 +106,7 @@ save(cities, city, country, file="myobjects.R")
 
 write.table(cities, file="cities.txt")
 
-sink (“cities.output.txt”)
+sink ("cities.output.txt")
 print (cities)
 sink ()
 
