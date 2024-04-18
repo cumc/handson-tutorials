@@ -1,0 +1,37 @@
+name: r_libs
+channels:
+  - dnachun
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - bioconductor-multtest
+  - bioconductor-pcatools
+  - bioconductor-qvalue
+  - r-abind
+  - r-base=4.3
+  - r-bigsnpr
+  - r-biocmanager
+  - r-bitops
+  - r-catools
+  - r-corrplot
+  - r-devtools
+  - r-flashpcar
+  - r-ggplot2
+  - r-gplots
+  - r-gtools
+  - r-hudson
+  - r-igraph
+  - r-irkernel
+  - r-languageserver
+  - r-mediation
+  - r-mendelianrandomization
+  - r-mrinstruments
+  - r-pacman
+  - r-pecotmr
+  - r-qqman
+  - r-rgl
+  - r-rmtstat
+  - r-tidyverse
+  - r-twosamplemr
+  
