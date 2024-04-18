@@ -28,7 +28,7 @@ mkdir -p ~/.parallel && touch ~/.parallel/will-cite
 find "$repo_dir/contents" -type f -name "*.ipynb" | parallel -j $(nproc) "jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace {}"
 
 # Prepare the get-data command
-curl -o "/home/jovyan/.synapseConfig" https://raw.githubusercontent.com/cumc/handson-tutorials/main/setup/docker/.synapseConfig
+curl -o "/home/jovyan/.synapseConfig" https://raw.githubusercontent.com/cumc/handson-tutorials/main/setup/.synapseConfig
 echo -e "#!/bin/bash\n" > $HOME/.pixi/bin/get-data && chmod +x $HOME/.pixi/bin/get-data
 echo "synapse get -r syn18700992 --downloadLocation $repo_dir/contents" >> $HOME/.pixi/bin/get-data
 
