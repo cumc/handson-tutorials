@@ -44,7 +44,7 @@ p2[[1]]
 mr_heterogeneity(dat1) # Test for heterogeneity
 mr_pleiotropy_test(dat1) # Test for pleiotropy
 
-Part 1.2
+### Part 1.2 ###
 
 ################RE-RUN the analysis with MI as the outcome############
 #### MI outcome dataset is "ieu-a-798"#######
