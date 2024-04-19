@@ -12,8 +12,8 @@ mkdir -p $repo_dir/contents/ldpred2
 curl -o "$repo_dir/contents/ldpred2/ldpred.ipynb" https://raw.githubusercontent.com/cumc/bioworkflows/master/ldpred/ldpred.ipynb
 curl -o "$repo_dir/contents/ldpred2/ldpred2_example.ipynb" https://raw.githubusercontent.com/cumc/bioworkflows/master/ldpred/ldpred2_example.ipynb
 
-mkdir -p $repo_dir/contents/clumping
-curl -o "$repo_dir/contents/clumping/clumping.ipynb" https://raw.githubusercontent.com/cumc/bioworkflows/master/GWAS/LD_Clumping.ipynb
+mkdir -p $repo_dir/contents/archive/clumping
+curl -o "$repo_dir/contents/archive/clumping/clumping.ipynb" https://raw.githubusercontent.com/cumc/bioworkflows/master/GWAS/LD_Clumping.ipynb
 
 mkdir -p $repo_dir/contents/ngs_qc_annotation/
 mkdir -p $repo_dir/contents/ngs_qc_annotation/pipelines
