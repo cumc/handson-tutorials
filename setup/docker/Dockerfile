@@ -1,7 +1,7 @@
 FROM ghcr.io/prefix-dev/pixi:latest
 USER root
 # For security reasons, SSL certificates and timezone database must be installed by host package manager
-RUN apt-get update && apt-get -y install ca-certificates tzdata libgl1 libgomp1
+RUN apt-get update && apt-get -y install ca-certificates tzdata libgl1 libgomp1 less
 # Use bash as default shell instead of dash
 RUN ln -sf /bin/bash /bin/sh  
 
