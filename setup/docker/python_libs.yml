@@ -31,6 +31,7 @@ dependencies:
   - markdown
   - markdown-kernel
   - matplotlib
+  - metaxcan
   - nbdime
   - nbformat
   - notebook
