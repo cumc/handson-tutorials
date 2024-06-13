@@ -40,11 +40,12 @@ Inside your job, go to Attachments -> stderr.autosave, and search for:
 ```
 where you could substitute `127.0.0.1` with the IP of the host instance, and paste the link inside a web browser.
 
-## Suspend and resume
+## Suspend, resume and cancel
 
 ```
 float suspend -j <job_id>
 float resume -j <job_id>
+float cancel -j <job_id>
 ```
 
 ## For teaching assistants
