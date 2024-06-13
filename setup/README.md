@@ -60,9 +60,9 @@ float resume -j <job_id>
 - For the jupyter server list of URL and student names, generate a file [like this](https://github.com/statgenetics/statgen-courses/blob/master/.github/workflows/rockefeller_2024.csv) through a pull request. It can be any name but should have `csv` format and extension. 
 - A couple of minutes after the PR is accepted, test if for a student listed in the CSV file, the corresponding server is avaiable as `https://statgenetics.github.io/statgen-courses/<firstname_lastname>`
 
-### maintance
+### Maintenance
 
-For maintance,
+For Maintenance,
 - After everything is setup and tested, we should keep all the instances suspended
 - Right before lab session, we resume all instances
 - Right after the lab session ends, we suspend again
