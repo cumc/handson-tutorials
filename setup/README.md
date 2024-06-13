@@ -1,4 +1,4 @@
-# How to submit a job to MMCloud (in the course setting)
+# How to setup tutorial servers on MMCloud
 
 ## Login to the Opcenter
 
