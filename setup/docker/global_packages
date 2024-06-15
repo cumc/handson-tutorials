@@ -20,6 +20,7 @@ jupyter_core
 jupyter_server
 king
 ldstore
+metaxcan
 micromamba
 nbconvert-core
 notebook
