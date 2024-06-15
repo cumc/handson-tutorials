@@ -12,7 +12,6 @@ USER jovyan
 COPY --chown=jovyan r_libs.yml /tmp
 COPY --chown=jovyan python_libs.yml /tmp
 COPY --chown=jovyan global_packages /tmp
-COPY --chown=jovyan init.sh /tmp
 COPY --chown=jovyan fixes.sh /tmp
 
 RUN mkdir -p /home/jovyan/.config/pixi && \
@@ -32,8 +31,8 @@ RUN micromamba env create --yes --quiet --file /tmp/r_libs.yml;
 RUN micromamba env create --yes --quiet --file /tmp/python_libs.yml;
 RUN micromamba clean --all --yes
 
-# Set path for R and Python libraries
-RUN bash /tmp/init.sh
+# Fix R and Python settings 
+RUN curl -fsSL https://raw.githubusercontent.com/gaow/misc/master/bash/pixi/init.sh | bash
 
 # Run some customized fixes
 RUN bash /tmp/fixes.sh
