@@ -11,14 +11,14 @@ USER jovyan
 # Copy over configs and environments
 COPY --chown=jovyan r_libs.yml /tmp
 COPY --chown=jovyan python_libs.yml /tmp
-COPY --chown=jovyan global_packages /tmp
+COPY --chown=jovyan global_packages.txt /tmp
 COPY --chown=jovyan fixes.sh /tmp
 
 RUN mkdir -p /home/jovyan/.config/pixi && \
     echo 'default_channels = ["dnachun", "conda-forge", "bioconda"]' > /home/jovyan/.config/pixi/config.toml
 
 # Install global packages with pixi
-RUN pixi global install $(tr '\n' ' ' < /tmp/global_packages)
+RUN pixi global install $(tr '\n' ' ' < /tmp/global_packages.txt)
 ENV PATH="/home/jovyan/.pixi/bin:${PATH}"
 
 # Install R and Python libraries with micromamba (will replace with pixi in future)
