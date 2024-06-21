@@ -31,6 +31,25 @@ CLI Options Breakdown:
 - The contexts after the pipe `|` will extract and print job ID to the terminal screen which is relevant to keep for suspending and restarting purpose
 
 ## Retrieve Login Token for the server
+### CLI Way
+Remember to substitite your job ID.
+
+The first step is to get the IP address and the port.
+```
+IP_ADDRESS=$(float show -j "$jobid" | grep -A 1 portMappings | tail -n 1 | awk '{print $4}')
+```
+
+The second step is to retrieve the login url from the log and strip out the token.
+```
+url=$(float log -j "$jobid" cat stderr.autosave | grep token= | head -n 1)
+token=$(echo "$url" | sed -E 's|.*http://[^/]+/(lab\?token=[a-zA-Z0-9]+).*|\1|')
+```
+
+The actual url could be constructed as follow:
+```
+new_url="http://$IP_ADDRESS/$token"
+```
+### Manual Way
 After the job is in `Execution` stage on MMC, please retrieve the Jupyter login token in stderr.autosave.
 Inside your job, go to Attachments -> stderr.autosave, and search for:
 ```
