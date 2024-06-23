@@ -16,7 +16,7 @@ Assuming that
 
 The below is the command to submit the jupyter interactive job as the course, the end user will need to modify the `securityGroup` or `gateway` as his/she own environment.
 ```
-float submit -i docker.io/yiweizh/rockefeller-jupyter -n firstname_lastname --instType r5.large --publish 8888:8888 --vmPolicy [onDemand=true] --migratePolicy [disable=true] --securityGroup sg-0fa5bd545c482d41a --withRoot=true --imageVolSize 30 --gateway g-30bgec3fbfeff8szxz28g | grep 'id:' | awk -F'id: ' '{print $2}' | awk '{print $1}'
+yes|float submit -i docker.io/yiweizh/rockefeller-jupyter -n firstname_lastname --instType r5.large --publish 8888:8888 --vmPolicy "[onDemand=true]" --migratePolicy "[disable=true]" --securityGroup sg-02867677e76635b25 --withRoot=true --imageVolSize 30 --gateway g-9xahbrb5rkbs0ic8yzylk | grep 'id:' | awk -F'id: ' '{print $2}' | awk '{print $1}'
 ```
 CLI Options Breakdown:
 - `-i` Container image URL
