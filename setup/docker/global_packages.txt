@@ -36,6 +36,7 @@ regenie
 sos
 snpsift
 synapseclient
+tensorqtl
 tree
 unzip
 vim
