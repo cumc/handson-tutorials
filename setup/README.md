@@ -49,7 +49,7 @@ The actual url could be constructed as follow:
 ```
 new_url="http://$IP_ADDRESS/$token"
 ```
-### Manual Way
+### Manual Way  (for reference; don't do this)
 After the job is in `Execution` stage on MMC, please retrieve the Jupyter login token in stderr.autosave.
 Inside your job, go to Attachments -> stderr.autosave, and search for:
 ```
