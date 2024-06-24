@@ -26,8 +26,9 @@ mkdir -p ~/.parallel && touch ~/.parallel/will-cite
 find "$repo_dir/contents" -type f -name "*.ipynb" | parallel -j $(nproc) "jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace {}"
 
 # Prepare the get-data command
+ln -s $repo_dir/setup/.synapseConfig $HOME/.synapseConfig
 echo -e "#!/bin/bash\n" > $HOME/.pixi/bin/get-data && chmod +x $HOME/.pixi/bin/get-data
-echo "synapse get -r syn18700992 -c $repo_dir/setup/.synapseConfig --downloadLocation $repo_dir/contents" >> $HOME/.pixi/bin/get-data
+echo "synapse get -r syn18700992 --downloadLocation $repo_dir/contents" >> $HOME/.pixi/bin/get-data
 get-data
 
 # Sync necessary resources: annovar software and data
