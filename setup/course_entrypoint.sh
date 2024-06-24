@@ -32,9 +32,11 @@ echo "synapse get -r syn18700992 --downloadLocation $repo_dir/contents" >> $HOME
 #get-data
 
 # Sync necessary resources: annovar software and data
-# BUCKET_ACCESS_KEY=${BUCKET_ACCESS_KEY:-""}
-# BUCKET_SECRET_KEY=${BUCKET_SECRET_KEY:-""}
-# (AWS_ACCESS_KEY_ID=$BUCKET_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$BUCKET_SECRET_KEY aws s3 sync s3://opcenter-bucket-ada686a0-ccdb-11ee-b922-02ebafc2e5cf/annovar_software/ $HOME/.pixi/bin --exclude "*" --include "*.pl" && chmod +x $HOME/.pixi/bin/*.pl) || (echo -e "\033[1;31mWarning: Cannot install ANNOVAR program due to license restriction. Exercise involving ANNOVAR annotations will not work unless you manually install ANNOVAR to $HOME/.pixi/bin folder of the tutorials.\033[0m" && true)
+BUCKET_ACCESS_KEY=${BUCKET_ACCESS_KEY:-""}
+BUCKET_SECRET_KEY=${BUCKET_SECRET_KEY:-""}
+(AWS_ACCESS_KEY_ID=$BUCKET_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$BUCKET_SECRET_KEY aws s3 sync s3://opcenter-bucket-ada686a0-ccdb-11ee-b922-02ebafc2e5cf/annovar_software/ $HOME/.pixi/bin --exclude "*" --include "*.pl" && chmod +x $HOME/.pixi/bin/*.pl) || (echo -e "\033[1;31mWarning: Cannot install ANNOVAR program due to license restriction. Exercise involving ANNOVAR annotations will not work unless you manually install ANNOVAR to $HOME/.pixi/bin folder of the tutorials.\033[0m" && true)
+# Sync the handout directory
+AWS_ACCESS_KEY_ID=$BUCKET_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$BUCKET_SECRET_KEY aws s3 sync s3://opcenter-bucket-ada686a0-ccdb-11ee-b922-02ebafc2e5cf/statgen_course /root/statgen-courses/handout --exclude "annovar_software/*"
 
 # Fix plink.multivariate
 mv $repo_dir/contents/archive/plink.multivariate $HOME/.pixi/bin && chmod +x $HOME/.pixi/bin/plink.multivariate
