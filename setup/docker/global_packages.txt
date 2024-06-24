@@ -18,6 +18,7 @@ jupyterlab
 jupyter_client
 jupyter_core
 jupyter_server
+jupyter_console
 king
 ldstore
 metaxcan
