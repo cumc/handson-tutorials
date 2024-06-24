@@ -38,3 +38,4 @@ snpsift
 synapseclient
 tree
 unzip
+vim
