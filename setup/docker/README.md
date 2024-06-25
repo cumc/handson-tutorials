@@ -50,11 +50,11 @@ docker $ tree
 Using `docker build` command to build the container. Make sure to specify the `--platform` option so that it is built in linux AMD64 architecture. You could tag the container name as you preferred.
 
 ```bash
-docker build --platform linux/amd64 -t yiweizh/rockefeller-jupyter:latest -f Dockerfile .
+docker build --platform linux/amd64 -t gaow/handson-tutorials:latest -f Dockerfile .
 ```
 Example output:
 ```
-docker build --platform linux/amd64 -t yiweizh/rockefeller-jupyter:latest -f Dockerfile .
+docker build --platform linux/amd64 -t gaow/handson-tutorials:latest -f Dockerfile .
 
 [+] Building 1.1s (28/28) FINISHED                                                                   docker:desktop-linux
  => [internal] load build definition from Dockerfile                                                                 0.0s
@@ -90,7 +90,7 @@ docker build --platform linux/amd64 -t yiweizh/rockefeller-jupyter:latest -f Doc
  => exporting to image                                                                                               0.0s
  => => exporting layers                                                                                              0.0s
  => => writing image sha256:891cdcf643c9ec45dac9505519841e15f319a309db489341d1622cc309c41f8f                         0.0s
- => => naming to docker.io/yiweizh/rockefeller-jupyter:latest                                                        0.0s
+ => => naming to docker.io/gaow/handson-tutorials:latest                                                        0.0s
 
 View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/tvgi1279d3fgb9cl6xahdz1bv
 
@@ -102,7 +102,7 @@ Check the image has been built successfully.
 ```bash
 docker $ docker images
 REPOSITORY                    TAG        IMAGE ID       CREATED        SIZE
-yiweizh/rockefeller-jupyter   latest     891cdcf643c9   6 hours ago    14GB
+gaow/handson-tutorials   latest     891cdcf643c9   6 hours ago    14GB
 ```
 
 ### Verify the docker images locally
@@ -115,5 +115,5 @@ docker run --platform linux/amd64 -d -p 8888:8888 <Image ID>
 ### Push to the dockerhub (optional)
 For enabling the container image to be pulled by the MMC later, you could push the container image to a public dockerhub.
 ```
-docker push yiweizh/rockefeller-jupyter:latest
+docker push gaow/handson-tutorials:latest
 ```
