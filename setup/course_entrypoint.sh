@@ -40,3 +40,4 @@ AWS_ACCESS_KEY_ID=$BUCKET_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$BUCKET_SECRET_KEY aw
 
 # Fix plink.multivariate
 mv $repo_dir/contents/archive/plink.multivariate $HOME/.pixi/bin && chmod +x $HOME/.pixi/bin/plink.multivariate
+micromamba install -n python_libs jupyter_client=8.6.2
