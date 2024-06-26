@@ -91,7 +91,10 @@ def manage(args):
 
     for jobid in jobidlist:
         try:
-            subprocess.run(["float", action, "-j", jobid, "-f"], check=True)
+            if action in ["suspend", "cancel"]:
+                subprocess.run(["float", action, "-j", jobid, "-f"], check=True)
+            else:
+                subprocess.run(["float", action, "-j", jobid], check=True)
             logging.info(f"Performed {action} on job ID: {jobid}")
         except subprocess.CalledProcessError as e:
             logging.error(f"Failed to perform {action} on job ID: {jobid}. Error: {e}")
@@ -127,4 +130,5 @@ def main():
     args.func(args)
 
 if __name__ == '__main__':
-    main()
+    main() 
+
