@@ -97,7 +97,7 @@ float cancel -j <job_id>
         Wang Chao,d6fioprtyruft80elx7mn
         Zheng Wei Gang,z0xo3ca8s50j5pnrh2wyi
         ```
-
+       **At this point all jobs are submitted to MMCloud. You need to keep track of these jobs on the OpCenter to make sure they are all "Executing" before moving on to the next step.**
     - `get_url`: this step will collect all the URL generated for each job
         - The output from `submit` will be used to collect URL
         ```
