@@ -1,4 +1,4 @@
-imiss <- read.table("gwas_example.imiss",header=TRUE)
+imiss <- read.table("gwas_example.smiss",header=TRUE)
 het <- read.table("gwas_example.het",header=TRUE) 
 
 upplimit <- mean(het$F)+(3*sd(het$F)) 
