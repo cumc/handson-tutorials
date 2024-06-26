@@ -14,6 +14,9 @@ def submit(args):
     output_file = args.output
     bucket_access_key = args.bucket_access_key
     bucket_secret_key = args.bucket_secret_key
+    gateway = args.gateway
+    security_group = args.security_group
+    image = args.image
 
     try:
         with open(input_file, 'r') as infile, open(output_file, 'w', newline='') as outfile:
@@ -25,12 +28,12 @@ def submit(args):
                 pinyin = row[1].replace(' ', '_')
                 job_name = pinyin
                 command = (
-                    f"yes | float submit -i docker.io/yiweizh/rockefeller-jupyter -n {job_name} "
+                    f"yes | float submit -i docker.io/{image} -n {job_name} "
                     f"-e BUCKET_ACCESS_KEY={bucket_access_key} "
                     f"-e BUCKET_SECRET_KEY={bucket_secret_key} "
                     "--instType r5.large --publish 8888:8888 --vmPolicy '[onDemand=true]' "
-                    "--migratePolicy '[disable=true]' --securityGroup sg-02867677e76635b25 "
-                    "--withRoot=true --imageVolSize 50 --gateway g-9xahbrb5rkbs0ic8yzylk | grep 'id:' | awk -F'id: ' '{print $2}' | awk '{print $1}'"
+                    "--migratePolicy '[disable=true]' "
+                    f"--securityGroup {security_group} --withRoot=true --imageVolSize 50 --gateway {gateway} | grep 'id:' | awk -F'id: ' '{{print $2}}' | awk '{{print $1}}'"
                 )
 
                 job_id = subprocess.getoutput(command).strip()
@@ -103,6 +106,9 @@ def main():
     parser_submit.add_argument('output', type=str, help="Output CSV file with names and job IDs.")
     parser_submit.add_argument('--bucket_access_key', type=str, required=True, help="Bucket access key.")
     parser_submit.add_argument('--bucket_secret_key', type=str, required=True, help="Bucket secret key.")
+    parser_submit.add_argument('--gateway', type=str, default='g-9xahbrb5rkbs0ic8yzylk', help="Gateway ID.")
+    parser_submit.add_argument('--security_group', type=str, default='sg-02867677e76635b25', help="Security group ID.")
+    parser_submit.add_argument('--image', type=str, default='yiweizh/rockefeller-jupyter', help="Docker image name.")
     parser_submit.set_defaults(func=submit)
 
     # Get URL command
