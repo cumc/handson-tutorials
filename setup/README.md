@@ -116,7 +116,7 @@ float cancel -j <job_id>
         ```
         For example,
         ```
-        python manage_jobs.py manage <suspend/resume/cancel> <shenzhen_2024.csv>
+        python manage_jobs.py manage <suspend/resume/cancel> shenzhen_2024.csv
         ```
 
 ### Maintenance
