@@ -1,8 +1,13 @@
+#!/usr/bin/env python3
 import argparse
 import csv
 import subprocess
 import re
 import sys
+import logging
+
+# Setup logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def submit(args):
     input_file = args.input
@@ -10,46 +15,56 @@ def submit(args):
     bucket_access_key = args.bucket_access_key
     bucket_secret_key = args.bucket_secret_key
 
-    with open(input_file, 'r') as infile, open(output_file, 'w', newline='') as outfile:
-        reader = csv.reader(infile)
-        writer = csv.writer(outfile)
+    try:
+        with open(input_file, 'r') as infile, open(output_file, 'w', newline='') as outfile:
+            reader = csv.reader(infile)
+            writer = csv.writer(outfile)
 
-        for row in reader:
-            name = row[1]
-            pinyin = row[1].replace(' ', '_')
-            job_name = pinyin
-            command = (
-                f"yes | float submit -i docker.io/yiweizh/rockefeller-jupyter -n {job_name} "
-                f"-e BUCKET_ACCESS_KEY={bucket_access_key} "
-                f"-e BUCKET_SECRET_KEY={bucket_secret_key} "
-                "--instType r5.large --publish 8888:8888 --vmPolicy '[onDemand=true]' "
-                "--migratePolicy '[disable=true]' --securityGroup sg-02867677e76635b25 "
-                "--withRoot=true --imageVolSize 50 --gateway g-9xahbrb5rkbs0ic8yzylk | grep 'id:' | awk -F'id: ' '{print $2}' | awk '{print $1}'"
-            )
+            for row in reader:
+                name = row[1]
+                pinyin = row[1].replace(' ', '_')
+                job_name = pinyin
+                command = (
+                    f"yes | float submit -i docker.io/yiweizh/rockefeller-jupyter -n {job_name} "
+                    f"-e BUCKET_ACCESS_KEY={bucket_access_key} "
+                    f"-e BUCKET_SECRET_KEY={bucket_secret_key} "
+                    "--instType r5.large --publish 8888:8888 --vmPolicy '[onDemand=true]' "
+                    "--migratePolicy '[disable=true]' --securityGroup sg-02867677e76635b25 "
+                    "--withRoot=true --imageVolSize 50 --gateway g-9xahbrb5rkbs0ic8yzylk | grep 'id:' | awk -F'id: ' '{print $2}' | awk '{print $1}'"
+                )
 
-            job_id = subprocess.getoutput(command).strip()
-            writer.writerow([name, job_id])
+                job_id = subprocess.getoutput(command).strip()
+                writer.writerow([name, job_id])
+                logging.info(f"Submitted job for {name} with Job ID: {job_id}")
+    except Exception as e:
+        logging.error(f"Error in submit function: {e}")
+        sys.exit(1)
 
 def get_url(args):
     input_file = args.input
     output_file = args.output
 
-    with open(input_file, 'r') as infile, open(output_file, 'w', newline='') as outfile:
-        reader = csv.reader(infile)
-        writer = csv.writer(outfile)
+    try:
+        with open(input_file, 'r') as infile, open(output_file, 'w', newline='') as outfile:
+            reader = csv.reader(infile)
+            writer = csv.writer(outfile)
 
-        for row in reader:
-            name, job_id = row
-            ip_command = f"float show -j {job_id} | grep -A 1 portMappings | tail -n 1 | awk '{{print $4}}'"
-            ip_address = subprocess.getoutput(ip_command).strip()
+            for row in reader:
+                name, job_id = row
+                ip_command = f"float show -j {job_id} | grep -A 1 portMappings | tail -n 1 | awk '{{print $4}}'"
+                ip_address = subprocess.getoutput(ip_command).strip()
 
-            log_command = f"float log -j {job_id} cat stderr.autosave | grep token= | head -n 1"
-            url = subprocess.getoutput(log_command).strip()
+                log_command = f"float log -j {job_id} cat stderr.autosave | grep token= | head -n 1"
+                url = subprocess.getoutput(log_command).strip()
 
-            token = re.search(r'http://[^/]+/(lab\?token=[a-zA-Z0-9]+)', url).group(1)
-            new_url = f"http://{ip_address}/{token}"
+                token = re.search(r'http://[^/]+/(lab\?token=[a-zA-Z0-9]+)', url).group(1)
+                new_url = f"http://{ip_address}/{token}"
 
-            writer.writerow([name, new_url, job_id])
+                writer.writerow([name, new_url, job_id])
+                logging.info(f"Retrieved URL for {name}: {new_url}")
+    except Exception as e:
+        logging.error(f"Error in get_url function: {e}")
+        sys.exit(1)
 
 def manage(args):
     action = args.action
@@ -57,25 +72,26 @@ def manage(args):
 
     valid_actions = ["suspend", "resume", "cancel"]
     if action not in valid_actions:
-        print("Invalid action. Allowed actions are: suspend, resume, and cancel.")
+        logging.error(f"Invalid action: {action}. Allowed actions are: {', '.join(valid_actions)}")
         sys.exit(1)
 
     try:
         with open(csv_file, 'r') as f:
-            pass
+            reader = csv.reader(f)
+            jobidlist = [row[-1] for row in reader]
     except FileNotFoundError:
-        print("File not found:", csv_file)
+        logging.error(f"File not found: {csv_file}")
+        sys.exit(1)
+    except Exception as e:
+        logging.error(f"Error reading CSV file: {e}")
         sys.exit(1)
 
-    jobidlist = []
-    with open(csv_file, 'r') as f:
-        reader = csv.reader(f)
-        for row in reader:
-            jobid = row[-1]
-            jobidlist.append(jobid)
-
     for jobid in jobidlist:
-        subprocess.run(["float", action, "-j", jobid, "-f"])
+        try:
+            subprocess.run(["float", action, "-j", jobid, "-f"], check=True)
+            logging.info(f"Performed {action} on job ID: {jobid}")
+        except subprocess.CalledProcessError as e:
+            logging.error(f"Failed to perform {action} on job ID: {jobid}. Error: {e}")
 
 def main():
     parser = argparse.ArgumentParser(description="Submit jobs, retrieve URLs, and manage jobs using Float CLI.")
