@@ -24,8 +24,8 @@ def submit(args):
             writer = csv.writer(outfile)
 
             for row in reader:
-                name = row[1]
-                pinyin = row[1].replace(' ', '_')
+                name = row[-1]
+                pinyin = row[-1].replace(' ', '_')
                 job_name = pinyin
                 command = (
                     f"yes | float submit -i docker.io/{image} -n {job_name} "
