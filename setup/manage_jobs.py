@@ -25,8 +25,7 @@ def submit(args):
 
             for row in reader:
                 name = row[-1]
-                pinyin = row[-1].replace(' ', '_')
-                job_name = pinyin
+                job_name = row[-1].replace(' ', '_')
                 command = (
                     f"yes | float submit -i docker.io/{image} -n {job_name} "
                     f"-e BUCKET_ACCESS_KEY={bucket_access_key} "
