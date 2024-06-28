@@ -121,7 +121,7 @@ float cancel -j <job_id>
         python manage_jobs.py manage <suspend/resume/cancel> shenzhen_2024.csv
         ```
 
-### Maintenance
+### Maintenance when on low budget
 
 For Maintenance,
 - After everything is setup and tested, we should keep all the instances suspended
