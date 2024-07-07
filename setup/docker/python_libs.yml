@@ -24,8 +24,6 @@ dependencies:
   - ipykernel
   - ipywidgets
   - ipympl
-  - jupyter_contrib_nbextensions
-  - jupyter_client>=8.0.0
   - jupyter-lsp
   - jupyterlab-lsp
   - jupyterlab-sos
