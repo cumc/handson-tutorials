@@ -41,8 +41,6 @@ AWS_ACCESS_KEY_ID=$BUCKET_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$BUCKET_SECRET_KEY aw
 # Fix plink.multivariate
 mv $repo_dir/contents/archive/plink.multivariate $HOME/.pixi/bin && chmod +x $HOME/.pixi/bin/plink.multivariate
 
-# Fix an issue with jupyter_client version as of June 2024 (not sure why a lower version was installed by default)
-micromamba install -n python_libs jupyter_client=8.6.2 -y
 # Fix an issue with LDSC conda package as of June 2024, by creating separate environment
 micromamba create -f $repo_dir/contents/chicago_hgen471/data/lab7/ldsc/environment.yml -y
 # Fix an issue with metaxcan conda package as of June 2024, by creating separate environment
