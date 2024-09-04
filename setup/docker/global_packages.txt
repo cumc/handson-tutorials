@@ -21,7 +21,6 @@ jupyter_server
 jupyter_console
 king
 ldstore
-metaxcan
 micromamba
 nbconvert-core
 notebook
