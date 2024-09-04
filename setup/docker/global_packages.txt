@@ -15,7 +15,7 @@ htslib
 impute2
 jedi-language-server
 jupyterlab
-jupyter_client>=8.0.0
+jupyter_client
 jupyter_core
 jupyter_server
 jupyter_console
