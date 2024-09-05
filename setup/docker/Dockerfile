@@ -18,7 +18,7 @@ RUN mkdir -p /home/jovyan/.config/pixi && \
     echo 'default_channels = ["dnachun", "conda-forge", "bioconda"]' > /home/jovyan/.config/pixi/config.toml
 
 # Install global packages with pixi
-RUN pixi global install $(tr '\n' ' ' < /tmp/global_packages.txt)
+RUN xargs -I % pixi global install % < /tmp/global_packages.txt
 ENV PATH="/home/jovyan/.pixi/bin:${PATH}"
 
 # Install R and Python libraries with micromamba (will replace with pixi in future)
