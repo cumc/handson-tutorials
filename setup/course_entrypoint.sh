@@ -36,7 +36,7 @@ BUCKET_ACCESS_KEY=${BUCKET_ACCESS_KEY:-""}
 BUCKET_SECRET_KEY=${BUCKET_SECRET_KEY:-""}
 # (AWS_ACCESS_KEY_ID=$BUCKET_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$BUCKET_SECRET_KEY aws s3 sync s3://gao-851725442056/AGIS/annovar_software/ $HOME/.pixi/bin --exclude "*" --include "*.pl" && chmod +x $HOME/.pixi/bin/*.pl) || (echo -e "\033[1;31mWarning: Cannot install ANNOVAR program due to license restriction. Exercise involving ANNOVAR annotations will not work unless you manually install ANNOVAR to $HOME/.pixi/bin folder of the tutorials.\033[0m" && true)
 # Sync the handout directory
-AWS_ACCESS_KEY_ID=$BUCKET_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$BUCKET_SECRET_KEY aws s3 sync s3://gao-851725442056/AGIS/ $HOME/handson-tutorials/contents --exclude "*.ipynb"
+AWS_ACCESS_KEY_ID=$BUCKET_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$BUCKET_SECRET_KEY aws s3 sync s3://statfungen/AGIS/ $HOME/handson-tutorials/contents --exclude "*.ipynb"
 
 # Fix plink.multivariate
 mv $repo_dir/contents/archive/plink.multivariate $HOME/.pixi/bin && chmod +x $HOME/.pixi/bin/plink.multivariate
