@@ -1,10 +1,3 @@
-name: python_libs
-channels:
-  - dnachun
-  - conda-forge
-  - bioconda
-  - nodefaults
-dependencies:
   - altair
   - bash_kernel
   - beautifulsoup4
@@ -57,7 +50,7 @@ dependencies:
   - wand
   - widgetsnbextension
   - xlrd
-  - python=3.12
+  - sos
   - sos-bash
   - sos-notebook
   - sos-python
