@@ -17,6 +17,7 @@
   - ipykernel
   - ipywidgets
   - ipympl
+  - jedi-language-server
   - jupyter-lsp
   - jupyterlab-lsp
   - jupyterlab-sos
