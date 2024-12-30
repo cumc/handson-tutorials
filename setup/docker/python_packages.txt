@@ -56,3 +56,4 @@
   - sos-notebook
   - sos-python
   - sos-r
+  - tensorqtl
