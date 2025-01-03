@@ -1,13 +1,13 @@
 # How to setup tutorial servers on MMCloud
 
-## Login to the Opcenter
+## Login to the Opcenter -- FIXME: obsolete
 
 You would need to log in before submitting jobs to launch the Jupyter instances.
 ```
 float login -u <username> -p <password> -a <opcenter_IP>
 ```
 
-## Start a server using Float CLI
+## Start a server using Float CLI -- FIXME: obsolete
 
 Assuming that 
 
@@ -31,6 +31,7 @@ CLI Options Breakdown:
 - The contexts after the pipe `|` will extract and print job ID to the terminal screen which is relevant to keep for suspending and restarting purpose
 
 ## Retrieve Login Token for the server
+
 ### CLI Way
 Remember to substitite your job ID.
 

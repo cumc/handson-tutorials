@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-cd /home/jovyan/
+cd $HOME
 curl -fsSL https://raw.githubusercontent.com/cumc/handson-tutorials/main/setup/course_entrypoint.sh | bash
-cd /home/jovyan/handson-tutorials/contents
+cd $HOME/handson-tutorials/contents
 jupyter-lab

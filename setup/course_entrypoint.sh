@@ -27,16 +27,17 @@ find "$repo_dir/contents" -type f -name "*.ipynb" | parallel -j $(nproc) "jupyte
 
 # Prepare the get-data command
 ln -s $repo_dir/setup/.synapseConfig $HOME/.synapseConfig
-echo -e "#!/bin/bash\n" > $HOME/.pixi/bin/get-data && chmod +x $HOME/.pixi/bin/get-data
-echo "synapse get -r syn18700992 --downloadLocation $repo_dir/contents" >> $HOME/.pixi/bin/get-data
+echo -e "#!/bin/bash\n" > $HOME/bin/get-data && chmod +x $HOME/bin/get-data
+echo "synapse get -r syn18700992 --downloadLocation $repo_dir/contents" >> $HOME/bin/get-data
 #get-data
 
-# Sync necessary resources: annovar software and data
+# Download data-set
 BUCKET_ACCESS_KEY=${BUCKET_ACCESS_KEY:-""}
 BUCKET_SECRET_KEY=${BUCKET_SECRET_KEY:-""}
-# (AWS_ACCESS_KEY_ID=$BUCKET_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$BUCKET_SECRET_KEY aws s3 sync s3://rockefeller-course/AGIS/annovar_software/ $HOME/.pixi/bin --exclude "*" --include "*.pl" && chmod +x $HOME/.pixi/bin/*.pl) || (echo -e "\033[1;31mWarning: Cannot install ANNOVAR program due to license restriction. Exercise involving ANNOVAR annotations will not work unless you manually install ANNOVAR to $HOME/.pixi/bin folder of the tutorials.\033[0m" && true)
-# Sync the handout directory
 AWS_ACCESS_KEY_ID=$BUCKET_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$BUCKET_SECRET_KEY aws s3 sync s3://rockefeller-course/AGIS/ $HOME/handson-tutorials/contents --exclude "*.ipynb"
 
 # Fix plink.multivariate
-mv $repo_dir/contents/archive/plink.multivariate $HOME/.pixi/bin && chmod +x $HOME/.pixi/bin/plink.multivariate
+mv $repo_dir/contents/archive/plink.multivariate $HOME/bin && chmod +x $HOME/bin/plink.multivariate
+
+# Install & redistribute ANNOVAR for educational purpose, with permission granted by the author of ANNOVAR on April 19, 2024
+curl https://www.openbioinformatics.org/annovar/download/0wgxR2rIVP/annovar.latest.tar.gz -o - | tar zxvf - --strip-components=1 -C $HOME/bin

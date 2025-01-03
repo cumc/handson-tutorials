@@ -1,46 +1,5 @@
-FROM ghcr.io/prefix-dev/pixi:latest
-USER root
-# For security reasons, SSL certificates and timezone database must be installed by host package manager
-RUN apt-get update && apt-get -y install ca-certificates tzdata libgl1 libgomp1 less
-# Use bash as default shell instead of dash
-RUN ln -sf /bin/bash /bin/sh  
-
-RUN useradd --no-log-init --create-home --shell /bin/bash --uid 1000 --no-user-group jovyan
-USER jovyan
-
-# Copy over configs and environments
-COPY --chown=jovyan r_libs.yml /tmp
-COPY --chown=jovyan python_libs.yml /tmp
-COPY --chown=jovyan global_packages.txt /tmp
-COPY --chown=jovyan fixes.sh /tmp
-
-RUN mkdir -p /home/jovyan/.config/pixi && \
-    echo 'default_channels = ["dnachun", "conda-forge", "bioconda"]' > /home/jovyan/.config/pixi/config.toml
-
-# Install global packages with pixi
-RUN xargs -I % pixi global install % < /tmp/global_packages.txt
-ENV PATH="/home/jovyan/.pixi/bin:${PATH}"
-
-# Install R and Python libraries with micromamba (will replace with pixi in future)
-RUN micromamba config prepend channels nodefaults 
-RUN micromamba config prepend channels bioconda
-RUN micromamba config prepend channels conda-forge
-RUN micromamba config prepend channels dnachun
-RUN micromamba shell init --shell=bash /home/jovyan/micromamba
-RUN micromamba env create --yes --quiet --file /tmp/r_libs.yml;
-RUN micromamba env create --yes --quiet --file /tmp/python_libs.yml;
-RUN micromamba clean --all --yes
-
-# Fix R and Python settings 
-RUN curl -fsSL https://raw.githubusercontent.com/gaow/misc/master/bash/pixi/init.sh | bash
-
-# Run some customized fixes
-RUN bash /tmp/fixes.sh
-
-# Clean up
-RUN rm -rf /tmp/*
-
-COPY  --chown=jovyan --chmod=755 entrypoint.sh /home/jovyan/entrypoint.sh
-ENV PYDEVD_DISABLE_FILE_VALIDATION=1
-WORKDIR /home/jovyan
-CMD ["/bin/bash", "/home/jovyan/entrypoint.sh"]
+FROM quay.io/danielnachun/tmate-minimal:latest
+RUN mkdir -p /home/ubuntu/bin
+COPY  --chown=ubuntu --chmod=755 entrypoint.sh /home/ubuntu/bin/entrypoint.sh
+WORKDIR /home/ubuntu
+CMD ["/bin/bash", "/home/ubuntu/bin/entrypoint.sh"]
