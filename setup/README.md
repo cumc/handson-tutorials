@@ -1,34 +1,90 @@
 # How to setup tutorial servers on MMCloud
 
-## Login to the Opcenter -- FIXME: obsolete
+For more detailed explanation of the setup, you can refer [to the documentation here](https://wanggroup.org/productivity_tips/mmcloud-interactive#admin---setting-up-shared-packages).
 
-You would need to log in before submitting jobs to launch the Jupyter instances.
-```
-float login -u <username> -p <password> -a <opcenter_IP>
-```
+## Setup EFS for Package Installation (one-time setup)
 
-## Start a server using Float CLI -- FIXME: obsolete
+As of 1/16/2025, packages will be installed onto an EFS for all users to use, rather than rely on a large image with packages pre-installed. This setup will require a one-time step of installing said packages into the EFS first.
 
 Assuming that 
 
 - The gateway has been set up in the Opcenter.
 - The security group for port 8888 is created in the AWS console.
+- The EFS has been created
+- The latest version of the `mm_interactive.sh` script is cloned. You can find it [here on GitHub](https://github.com/rfeng2023/mmcloud/tree/main/example)
 
-The below is the command to submit the jupyter interactive job as the course, the end user will need to modify the `securityGroup` or `gateway` as his/she own environment.
+Run the command below to start `shared-admin` mode, which will allow you to install packages for all other users to access. Fill in the necessary parameters that are encapsulated in `<>`.
+
+```bash
+mm_interactive.sh -o <OPCENTER_IP> \
+-ide tmate \
+-g <GATEWAY_ID> \
+-sg <SECURITY_GROUP> \
+-efs <EFS_IP> \
+--shared-admin \
+-ivs 20
 ```
-yes|float submit -i docker.io/yiweizh/rockefeller-jupyter -n firstname_lastname --instType r5.large --publish 8888:8888 --vmPolicy "[onDemand=true]" --migratePolicy "[disable=true]" --securityGroup sg-02867677e76635b25 --withRoot=true --imageVolSize 30 --gateway g-9xahbrb5rkbs0ic8yzylk | grep 'id:' | awk -F'id: ' '{print $2}' | awk '{print $1}'
+
+When prompted, input your account details: your OpCenter username and password. Then, a connection to the interactive session will be established from your shell terminal. You will see the below message. Just type `y` and enter to continue.
+
+```
+NOTICE: tmate sessions are primarily designed for initial package configuration.
+For regular development work, we recommend utilizing a more advanced Integrated Development Environment (IDE)
+via the -ide option, if you have previously set up an alternative IDE.
+Do you wish to proceed with the tmate session? (y/N): y
+```
+
+A few minutes later, you should see the output:
+
+```bash
+To access the server, copy this URL into a browser: ...
+```
+
+or
+
+```bash
+SSH session: ...
+```
+
+Copy the URL into your web browser. For the SSH session, you may copy that into your terminal.
+
+Upon accessing the tmate session, you may now install packages directly into the EFS. Please run the command below to get started on installing the initial packages.
+``` bash
+curl -fsSL https://raw.githubusercontent.com/gaow/misc/master/bash/pixi/pixi-setup.sh | bash
+```
+
+Then, install the course-specific courses with the commands below:
+```bash
+pixi global install --environment r-base $(curl -fsSL https://raw.githubusercontent.com/cumc/handson-tutorials/main/setup/r_packages.txt | grep -v "#" | tr '\n' ' ')
+pixi global install --environment python $(curl -fsSL https://raw.githubusercontent.com/cumc/handson-tutorials/main/setup/python_packages.txt | grep -v "#" | tr '\n' ' ')
+pixi clean cache -y
+```
+
+Overall, this should take an hour to install everything. Ideally, you would only need to do this once.
+
+## Start a Server using `mm_interactive.sh`
+
+The user may now create a server to start accessing the shared packages that were just installed. With the same script, below is the command to submit the jupyter interactive job for the course. The end user will need to modify the `<>` variables according to their own environment.
+```bash
+mm_interactive.sh -o <OPCENTER_IP> \
+ -g <GATEWAY_ID> \
+ -sg <SECURITY_GROUP> \
+ -efs <EFS_IP> \
+ --oem-packages \
+ -jn <job_name> \
+ -ide jupyter \
+ -u <username> \
+ -p <password>
 ```
 CLI Options Breakdown:
-- `-i` Container image URL
-- `-n` Job Name
-- `--instType` The instance type you want to host the Jupyter server on
-- `--publish` Port mapping between container and host
-- `--vmPolicy [onDemand=true]` Specify the instance to be on-demand, so it won't have spot reclaims from AWS
-- `--migratePolicy [disable=true]` Specify the migration policy to be disabled
-- `--securityGroup` Specify the AWS security group to allow inbound access to port 8888
-- `--imageVolSize` Specify the EBS volume size that backs up the file system for the container
-- `--gateway` (Optional) Specify the gateway you want the job to be attached to
-- The contexts after the pipe `|` will extract and print job ID to the terminal screen which is relevant to keep for suspending and restarting purpose
+- `-g` Specify the gateway you want the job to be attached to
+- `-sg` Specify the AWS security group to allow inbound access to port 8888
+- `-efs` Specify the EFS IP, which houses the installed packages
+- `--oem-packages` An interactive job mode that allows the user to use only shared packages
+- `-jn` Job name
+- `-ide` Specify the job's IDE. Can be access through the browser
+- `-u` The user's OpCenter username (script will ask if not given)
+- `-p` The user's Opcenter password (script will ask if not given)
 
 ## Retrieve Login Token for the server
 
