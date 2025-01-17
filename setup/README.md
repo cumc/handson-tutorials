@@ -76,7 +76,8 @@ mm_jobman.sh -o <OPCENTER_IP> \
  -jn <job_name> \
  -ide jupyter \
  -u <username> \
- -p <password>
+ -p <password> \
+ --entrypoint <github content link>
 ```
 CLI Options Breakdown:
 - `-g` Specify the gateway you want the job to be attached to
@@ -87,6 +88,7 @@ CLI Options Breakdown:
 - `-ide` Specify the job's IDE. Can be access through the browser
 - `-u` The user's OpCenter username (script will ask if not given)
 - `-p` The user's Opcenter password (script will ask if not given)
+- `--entrypoint` Please use [URL to this script](https://raw.githubusercontent.com/cumc/handson-tutorials/refs/heads/main/setup/course_entrypoint.sh) to complete initial setup on the VM upon start
 
 **Each student will run their own server so we need as many servers as the number of students.**
 
