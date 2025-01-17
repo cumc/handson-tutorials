@@ -1,6 +1,6 @@
 # How to setup tutorial servers on MMCloud
 
-For more detailed explanation of the setup, you can refer [to the documentation here](https://wanggroup.org/productivity_tips/mmcloud-interactive#admin---setting-up-shared-packages).
+For more detailed explanation of the setup, you can refer [to the documentation here](https://wanggroup.org/productivity_tips/mmcloud-interactive).
 
 ## Setup EFS for Package Installation (one-time setup)
 
