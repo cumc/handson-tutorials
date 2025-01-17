@@ -4,19 +4,19 @@ For more detailed explanation of the setup, you can refer [to the documentation 
 
 ## Setup EFS for Package Installation (one-time setup)
 
-As of 1/16/2025, packages will be installed onto an EFS for all users to use, rather than rely on a large image with packages pre-installed. This setup will require a one-time step of installing said packages into the EFS first.
+As of 1/16/2025, packages will be installed onto an EFS for all users to use, rather than rely on large docker images per user with packages pre-installed. This setup will require a one-time step of installing said packages into the EFS first.
 
 Assuming that 
 
 - The gateway has been set up in the Opcenter.
 - The security group for port 8888 is created in the AWS console.
 - The EFS has been created
-- The latest version of the `mm_interactive.sh` script is cloned. You can find it [here on GitHub](https://github.com/rfeng2023/mmcloud/tree/main/example)
+- The latest version of the `mm_jobman.sh` script is cloned. You can find it [here on GitHub](https://github.com/rfeng2023/mmcloud/tree/main/example).
 
-Run the command below to start `shared-admin` mode, which will allow you to install packages for all other users to access. Fill in the necessary parameters that are encapsulated in `<>`.
+Run the command below to start `shared-admin` mode, which will allow you to install packages as an admin for all other users to access as shared packages. Fill in the necessary parameters that are encapsulated in `<>`.
 
 ```bash
-mm_interactive.sh -o <OPCENTER_IP> \
+mm_jobman.sh -o <OPCENTER_IP> \
 -ide tmate \
 -g <GATEWAY_ID> \
 -sg <SECURITY_GROUP> \
@@ -62,11 +62,13 @@ pixi clean cache -y
 
 Overall, this should take an hour to install everything. Ideally, you would only need to do this once.
 
-## Start a Server using `mm_interactive.sh`
+The purpose of this job is to setup packages. **Once you are done with the setup, you can quite the `tmate` session and cancel the job to stop the charges.**
+
+## Start a Server using `mm_jobman.sh`
 
 The user may now create a server to start accessing the shared packages that were just installed. With the same script, below is the command to submit the jupyter interactive job for the course. The end user will need to modify the `<>` variables according to their own environment.
 ```bash
-mm_interactive.sh -o <OPCENTER_IP> \
+mm_jobman.sh -o <OPCENTER_IP> \
  -g <GATEWAY_ID> \
  -sg <SECURITY_GROUP> \
  -efs <EFS_IP> \
