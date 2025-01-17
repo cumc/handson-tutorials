@@ -62,7 +62,7 @@ pixi clean cache -y
 
 Overall, this should take an hour to install everything. Ideally, you would only need to do this once.
 
-The purpose of this job is to setup packages. **Once you are done with the setup, you can quite the `tmate` session and cancel the job to stop the charges.**
+The purpose of this job is to setup packages. **Once you are done with the setup, you should quit the `tmate` session and cancel the job to stop the unncessary cost running this setup server.**
 
 ## Start a Server using `mm_jobman.sh`
 
@@ -87,6 +87,8 @@ CLI Options Breakdown:
 - `-ide` Specify the job's IDE. Can be access through the browser
 - `-u` The user's OpCenter username (script will ask if not given)
 - `-p` The user's Opcenter password (script will ask if not given)
+
+**Each student will run their own server so we need as many servers as the number of students.**
 
 ## Retrieve Login Token for the server
 
