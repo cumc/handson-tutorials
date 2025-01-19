@@ -1,0 +1,37 @@
+method_name,publish_date,type, first_author, journal, citation(until20241231)
+PrediXcan,2015-08-10,PrediXcan,Gamazon,Nature Genetics, 1765
+FUSION,2016-02-08,others, Gusev, Nature Genetics, 2031
+SMR,2016-03-28,MR, Zhu, Nature Genetics, 2330
+bfGWAS,2017-08-24,GWAS-extension, Yang, the American Journal of Human Genetics,55
+s-PrediXcan,2018-05-08,PrediXcan, Barbeira, Nature Communications,988
+LDA-MR-Egger,2018-05-29,MR, Barfield, Genetic Epidemiology,90
+multiXcan,2019-01-22,PrediXcan, Barbeira, Plos Genetics,327
+UTMOST,2017-11-20,multi-tissue/trait/..., Hu, Nature Genetics,323
+FOCUS,2019-03-29, fine-mapping, Mancuso, Nature Genetics,337
+TIGAR,2019-06-20,TIGAR, Nagpal, the American Journal of Human Genetics,117
+CoMM,2018-10-05,others, Yang, Bioinformatics,42
+EpiXcan,2019-08-23,PrediXcan, Zhang, Nature Communications,99
+PWAS, 2020-07-14, others, Brandes, Genome Biology,105
+BGW-TWAS,2020-09-21, GWAS-extension, Luningham, the American Journal of Human Genetics, 74
+FOGS, 2019-12-16, fine-mapping, Wu, Human Genetics,37
+PMR-Egger,2020-07-31,MR, Yuan, Nature Communications,117
+MR-JRI,2020-10-05,MR,Zhou, Nature Genetics,192
+MOSTWAS,2021-03-08,multi-tissue/trait/..., Bhattacharya, Plos Genetics,62
+multitrait TWAS, 2021-04-05, multi-tissue/trait/..., Feng, Genetic Epidemiology,13
+moPMR-Egger,2021-01-11, MR, Liu, the American Journal of Human Genetics,44
+VC-TWAS, 2021-04-02, TIGAR, Tang, Plos Genetics, 44
+BFGWAS-QUANT, 2022-10-13, GWAS-extension,Chen, HGG Advances,2
+TIGAR-v2,2022-01-13,TIGAR, Parrish, HGG Advances, 28
+OTTERS,2023-03-07, integration/ensemble, Dai, Nature Communications,23
+TGFM,2023-11-08,fine-mapping, Strober, medRxiv,4
+PWAS-O,2024-09-05,integration/ensemble, Hu, the American Journal of Human Genetics,1
+SR-TWAS,2024-08-05,integration/ensemble, Parrish, Nature Communications,0
+MRLocus,2021-04-19, MR, Zhu, Plos Genetics,38
+METRO, 2022-05-05, multi-tissue/trait/..., Li, the American Journal of Human Genetics,20
+PTWAS, 2020-09-11, others, Zhang, Genome Biology,70
+TWMR, 2019-07-24, MR, Porcu, Nature Communications,270
+TESLA,2023-01-26,multi-tissue/trait/...,Chen,Nature Genetics,33
+SUMMIT, 2022-10-25, others, Zhang, Nature Communications,17
+RF-MTL, 2020-11-18, multi-tissue/trait/..., Grinberg, Genetic Epidemiology,14
+ETWAS, 2021-03-27,others, Yao, Schizophrenia Bulletin,14
+MATS, 2022-09-30, multi-tissue/trait/..., Knutson,  Human Molecular Genetics,6
