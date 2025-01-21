@@ -1,5 +1,6 @@
 #!/bin/bash
 
+mkdir -p $HOME/bin
 repo_dir=`pwd`/handson-tutorials
 
 # Clone GitHub repo
