@@ -1,5 +1,6 @@
 #!/bin/bash
 
+mkdir -p $HOME/bin
 repo_dir=`pwd`/handson-tutorials
 
 # Clone GitHub repo
@@ -41,3 +42,6 @@ mv $repo_dir/contents/archive/plink.multivariate $HOME/bin && chmod +x $HOME/bin
 
 # Install & redistribute ANNOVAR for educational purpose, with permission granted by the author of ANNOVAR on April 19, 2024
 curl https://www.openbioinformatics.org/annovar/download/0wgxR2rIVP/annovar.latest.tar.gz -o - | tar zxvf - --strip-components=1 -C $HOME/bin
+
+cd $HOME/handson-tutorials/contents
+jupyter-lab
