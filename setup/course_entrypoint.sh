@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#mkdir -p $HOME/bin
-#export PATH="$HOME/bin:$PATH"
+mkdir -p $HOME/bin
+echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
 repo_dir=`pwd`/handson-tutorials
 
 # Clone GitHub repo
@@ -39,10 +39,10 @@ BUCKET_SECRET_KEY=${BUCKET_SECRET_KEY:-""}
 AWS_ACCESS_KEY_ID=$BUCKET_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$BUCKET_SECRET_KEY aws s3 sync s3://rockefeller-course/AGIS/ $HOME/handson-tutorials/contents --exclude "*.ipynb"
 
 # Fix plink.multivariate
-mv $repo_dir/contents/archive/plink.multivariate /usr/local/bin && chmod +x /usr/local/bin/plink.multivariate
+mv $repo_dir/contents/archive/plink.multivariate $HOME/bin && chmod +x $HOME/bin/plink.multivariate
 
 # Install & redistribute ANNOVAR for educational purpose, with permission granted by the author of ANNOVAR on April 19, 2024
-curl https://www.openbioinformatics.org/annovar/download/0wgxR2rIVP/annovar.latest.tar.gz -o - | tar zxvf - --strip-components=1 -C /usr/local/bin
+curl https://www.openbioinformatics.org/annovar/download/0wgxR2rIVP/annovar.latest.tar.gz -o - | tar zxvf - --strip-components=1 -C $HOME/bin
 
 cd $HOME/handson-tutorials/contents
 jupyter-lab
