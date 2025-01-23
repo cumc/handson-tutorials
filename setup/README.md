@@ -55,8 +55,9 @@ curl -fsSL https://raw.githubusercontent.com/gaow/misc/master/bash/pixi/pixi-set
 
 Then, install the course-specific courses with the commands below:
 ```bash
-pixi global install --environment r-base $(curl -fsSL https://raw.githubusercontent.com/cumc/handson-tutorials/main/setup/r_packages.txt | grep -v "#" | tr '\n' ' ')
-pixi global install --environment python $(curl -fsSL https://raw.githubusercontent.com/cumc/handson-tutorials/main/setup/python_packages.txt | grep -v "#" | tr '\n' ' ')
+pixi global install $(curl -fsSL https://raw.githubusercontent.com/cumc/handson-tutorials/main/setup/global_packages.txt | tr '\n' ' ') \
+pixi global install --environment r-base $(curl -fsSL https://raw.githubusercontent.com/cumc/handson-tutorials/main/setup/r_packages.txt | grep -v "#" | tr '\n' ' ') \
+pixi global install --environment python $(curl -fsSL https://raw.githubusercontent.com/cumc/handson-tutorials/main/setup/python_packages.txt | grep -v "#" | tr '\n' ' ') \
 pixi clean cache -y
 ```
 
