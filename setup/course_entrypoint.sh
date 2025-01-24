@@ -1,6 +1,7 @@
 #!/bin/bash
 
 mkdir -p $HOME/bin
+echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
 repo_dir=`pwd`/handson-tutorials
 
 # Clone GitHub repo
