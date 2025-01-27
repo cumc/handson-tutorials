@@ -136,7 +136,9 @@ float cancel -j <job_id>
 ### Goal
 
 - For a list of student names (in English) generate generate a file [like this](https://github.com/statgenetics/statgen-courses/blob/master/.github/workflows/rockefeller_2024.csv) and send a PR to that folder. It can be any name but should have `csv` format and extension. **The last line of this file should be empty line**.
-- A couple of minutes after the PR is accepted, test if for a student listed in the CSV file, the corresponding server is avaiable as `https://statgenetics.github.io/statgen-courses/<firstname_lastname>`
+- A couple of minutes after the PR is accepted, test if for a student listed in the CSV file, the corresponding server is avaiable as `https://statgenetics.github.io/statgen-courses/<student_name_entry>`
+
+- Currently `student_name_entry` follows the format of using the first word of last name (if multiple), with all lowercase and no special characters.
 
 ### Setting up servers
 
