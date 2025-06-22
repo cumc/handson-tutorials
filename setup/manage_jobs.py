@@ -5,6 +5,8 @@ import subprocess
 import re
 import sys
 import logging
+import tempfile
+import os
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -15,9 +17,31 @@ def submit(args):
     gateway = args.gateway
     security_group = args.security_group
     opcenter = args.opcenter
-    bind_script = args.bind_script
+    bind_scripts = args.bind_scripts
     init_script = args.init_script
     efs = args.efs
+
+    # Combine all bind scripts into one temporary file
+    try:
+        combined_script_content = []
+        for script_path in bind_scripts:
+            with open(script_path, 'r') as script_file:
+                script_content = script_file.read().strip()
+                combined_script_content.append(script_content)
+                logging.info(f"Loaded script: {script_path}")
+        
+        # Join scripts with empty lines
+        combined_content = '\n\n'.join(combined_script_content)
+        
+        # Create temporary file for the combined script
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as temp_script:
+            temp_script.write(combined_content)
+            temp_script_path = temp_script.name
+            logging.info(f"Created combined script at: {temp_script_path}")
+
+    except Exception as e:
+        logging.error(f"Error combining bind scripts: {e}")
+        sys.exit(1)
 
     try:
         with open(input_file, 'r') as infile, open(output_file, 'w', newline='') as outfile:
@@ -38,7 +62,7 @@ def submit(args):
                     f"--securityGroup {security_group} "
                     f"--withRoot "
                     f"--allowList [r5*,r6*,r7*,m*] "
-                    f"-j {bind_script} "
+                    f"-j {temp_script_path} "
                     f"--hostInit {init_script} "
                     f"--dirMap /mnt/efs:/mnt/efs "
                     f"-n {job_name} "
@@ -62,9 +86,17 @@ def submit(args):
                 job_id = subprocess.getoutput(command).strip()
                 writer.writerow([name, job_id])
                 logging.info(f"Submitted job for {name} with Job ID: {job_id}")
+
     except Exception as e:
         logging.error(f"Error in submit function: {e}")
         sys.exit(1)
+    finally:
+        # Clean up the temporary file
+        try:
+            os.unlink(temp_script_path)
+            logging.info(f"Cleaned up temporary script: {temp_script_path}")
+        except Exception as e:
+            logging.warning(f"Could not clean up temporary file {temp_script_path}: {e}")
 
 def get_url(args):
     input_file = args.input
@@ -134,7 +166,7 @@ def main():
     parser_submit.add_argument('--gateway', type=str, default='g-sidlpgb7oi9p48kxycpmn', help="Gateway ID.")
     parser_submit.add_argument('--security_group', type=str, default='sg-02867677e76635b25', help="Security group ID.")
     parser_submit.add_argument('--opcenter', type=str, required=True, help="OpCenter address (e.g., 44.222.241.133).")
-    parser_submit.add_argument('--bind_script', type=str, required=True, help="Path to bind mount script.")
+    parser_submit.add_argument('--bind_scripts', type=str, nargs='+', required=True, help="Paths to bind mount scripts (multiple scripts will be combined).")
     parser_submit.add_argument('--init_script', type=str, required=True, help="Path to host init script.")
     parser_submit.add_argument('--efs', type=str, required=True, help="EFS configuration string.")
     parser_submit.set_defaults(func=submit)
