@@ -4,16 +4,15 @@ For more detailed explanation of the setup, you can refer [to the documentation 
 
 ## Setup EFS for Package Installation (one-time setup)
 
-As of 1/16/2025, packages will be installed onto an EFS for all users to use, rather than rely on large docker images per user with packages pre-installed. This setup will require a one-time step of installing said packages into the EFS first.
-
 Assuming that 
 
 - The gateway has been set up in the Opcenter.
 - The security group for port 8888 is created in the AWS console.
 - The EFS has been created
-- The latest version of the `mm_jobman.sh` script is cloned. You can find it [here on GitHub](https://github.com/rfeng2023/mmcloud/tree/main/example).
 
-Run the command below to start `shared-admin` mode, which will allow you to install packages as an admin for all other users to access as shared packages. Fill in the necessary parameters that are encapsulated in `<>`.
+### Start a `tmate` session in `admin` mode
+
+1. Follow the instructions here [to access a tmate session for installing the OEM packages](https://wanggroup.org/productivity_tips/mmcloud-admin-notes#install-oem-packages). Briefly, run the command below to start a `tmate` session in `admin` mode, which will allow you to install packages as an admin for all other users to access as shared packages. Fill in the necessary parameters that are encapsulated in `<>`.
 
 ```bash
 mm_jobman.sh -o <OPCENTER_IP> \
@@ -21,7 +20,7 @@ mm_jobman.sh -o <OPCENTER_IP> \
 -g <GATEWAY_ID> \
 -sg <SECURITY_GROUP> \
 -efs <EFS_IP> \
---shared-admin \
+--admin \
 -ivs 20
 ```
 
@@ -48,9 +47,11 @@ SSH session: ...
 
 Copy the URL into your web browser. For the SSH session, you may copy that into your terminal.
 
+### Install software in `admin` mode
+
 Upon accessing the tmate session, you may now install packages directly into the EFS. Please run the command below to get started on installing the initial packages.
 ``` bash
-curl -fsSL https://raw.githubusercontent.com/gaow/misc/master/bash/pixi/pixi-setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/StatFunGen/misc/master/bash/pixi/pixi-setup.sh | bash
 ```
 
 Then, install the course-specific courses with the commands below:
@@ -61,81 +62,15 @@ pixi global install --environment python $(curl -fsSL https://raw.githubusercont
 pixi clean cache -y
 ```
 
-Overall, this should take an hour to install everything. Ideally, you would only need to do this once.
+Overall, this should take an hour to install everything. In principle, you would only need to do this once.
 
 The purpose of this job is to setup packages. **Once you are done with the setup, you should quit the `tmate` session and cancel the job to stop the unncessary cost running this setup server.**
 
-## Start a Server using `mm_jobman.sh`
+## Manage students' computing instances
 
-The user may now create a server to start accessing the shared packages that were just installed. With the same script, below is the command to submit the jupyter interactive job for the course. The end user will need to modify the `<>` variables according to their own environment.
-```bash
-mm_jobman.sh -o <OPCENTER_IP> \
- -g <GATEWAY_ID> \
- -sg <SECURITY_GROUP> \
- -efs <EFS_IP> \
- --oem-packages \
- -jn <job_name> \
- -ide jupyter \
- -u <username> \
- -p <password> \
- --entrypoint <github content link>
-```
-CLI Options Breakdown:
-- `-g` Specify the gateway you want the job to be attached to
-- `-sg` Specify the AWS security group to allow inbound access to port 8888
-- `-efs` Specify the EFS IP, which houses the installed packages
-- `--oem-packages` An interactive job mode that allows the user to use only shared packages
-- `-jn` Job name
-- `-ide` Specify the job's IDE. Can be access through the browser
-- `-u` The user's OpCenter username (script will ask if not given)
-- `-p` The user's Opcenter password (script will ask if not given)
-- `--entrypoint` Please use [URL to this script](https://raw.githubusercontent.com/cumc/handson-tutorials/refs/heads/main/setup/course_entrypoint.sh) to complete initial setup on the VM upon start
+### Overview
 
-**Each student will run their own server so we need as many servers as the number of students.**
-
-## Retrieve Login Token for the server
-
-### CLI Way
-Remember to substitite your job ID.
-
-The first step is to get the IP address and the port.
-```
-IP_ADDRESS=$(float show -j "$jobid" | grep -A 1 portMappings | tail -n 1 | awk '{print $4}')
-```
-
-The second step is to retrieve the login url from the log and strip out the token.
-```
-url=$(float log -j "$jobid" cat stderr.autosave | grep token= | head -n 1)
-token=$(echo "$url" | sed -E 's|.*http://[^/]+/(lab\?token=[a-zA-Z0-9]+).*|\1|')
-```
-
-The actual url could be constructed as follow:
-```
-new_url="http://$IP_ADDRESS/$token"
-```
-### Manual Way  (for reference; don't do this)
-After the job is in `Execution` stage on MMC, please retrieve the Jupyter login token in stderr.autosave.
-Inside your job, go to Attachments -> stderr.autosave, and search for:
-```
-[I 2024-04-09 21:56:49.090 ServerApp] Jupyter Server 2.13.0 is running at:
-[I 2024-04-09 21:56:49.090 ServerApp] http://9486a94be75a:8888/lab?token=e466d716b939274a422d23a4b0aac9a68d4b408f6c9da644
-[I 2024-04-09 21:56:49.090 ServerApp]     http://127.0.0.1:8888/lab?token=e466d716b939274a422d23a4b0aac9a68d4b408f6c9da644
-```
-where you could substitute `127.0.0.1` with the IP of the host instance, and paste the link inside a web browser.
-
-## Suspend, resume and cancel
-
-```
-float suspend -j <job_id>
-float resume -j <job_id>
-float cancel -j <job_id>
-```
-
-## For teaching assistants
-
-### Goal
-
-- For a list of student names (in English) generate generate a file [like this](https://github.com/statgenetics/statgen-courses/blob/master/.github/workflows/rockefeller_2024.csv) and send a PR to that folder. It can be any name but should have `csv` format and extension. **The last line of this file should be empty line**.
+- For a list of student names (in English) we will run a some commands (see below) to generate a file [like this](https://github.com/statgenetics/statgen-courses/blob/master/.github/workflows/rockefeller_2024.csv) and send a PR to that folder. It can be any name but should have `csv` format and extension. **The last line of this file should be an empty line**.
 - A couple of minutes after the PR is accepted, test if for a student listed in the CSV file, the corresponding server is avaiable as `https://statgenetics.github.io/statgen-courses/<firstname_lastname>`
 
 ### Setting up servers
@@ -185,9 +120,9 @@ float cancel -j <job_id>
         python manage_jobs.py manage <suspend/resume/cancel> shenzhen_2024.csv
         ```
 
-### Maintenance when on low budget
+### Maintaing the servers
 
-For Maintenance,
+For Maintenance especially when on low budget,
 - After everything is setup and tested, we should keep all the instances suspended
 - Right before lab session, we resume all instances
 - Right after the lab session ends, we suspend again
