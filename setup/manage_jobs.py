@@ -88,6 +88,7 @@ def get_url(args):
 
                 writer.writerow([name, new_url, job_id])
                 logging.info(f"Retrieved URL for {name}: {new_url}")
+            writer.writerow([]) # need an empty row at the end, for GitHub Action to easily consolidate multiple lists to generate gh-pages
     except Exception as e:
         logging.error(f"Error in get_url function: {e}")
         sys.exit(1)
