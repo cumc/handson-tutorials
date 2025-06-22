@@ -12,11 +12,12 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 def submit(args):
     input_file = args.input
     output_file = args.output
-    bucket_access_key = args.bucket_access_key
-    bucket_secret_key = args.bucket_secret_key
     gateway = args.gateway
     security_group = args.security_group
-    image = args.image
+    opcenter = args.opcenter
+    bind_script = args.bind_script
+    init_script = args.init_script
+    efs = args.efs
 
     try:
         with open(input_file, 'r') as infile, open(output_file, 'w', newline='') as outfile:
@@ -26,13 +27,36 @@ def submit(args):
             for row in reader:
                 name = row[-1]
                 job_name = row[-1].replace(' ', '_')
+                # Create a lowercase version for the dataVolume path
+                name_for_path = name.replace(' ', '_').lower()
+
                 command = (
-                    f"yes | float submit -i docker.io/{image} -n {job_name} "
-                    f"-e BUCKET_ACCESS_KEY={bucket_access_key} "
-                    f"-e BUCKET_SECRET_KEY={bucket_secret_key} "
-                    "--instType r5.large --publish 8888:8888 --vmPolicy '[onDemand=true]' "
-                    "--migratePolicy '[disable=true]' "
-                    f"--securityGroup {security_group} --withRoot=true --imageVolSize 50 --gateway {gateway} | grep 'id:' | awk -F'id: ' '{{print $2}}' | awk '{{print $1}}'"
+                    f"float submit -a {opcenter} "
+                    f"-i ghcr.io/statfungen/tmate-minimal "
+                    f"-c 2 -m 16 "
+                    f"--vmPolicy [onDemand=true] "
+                    f"--securityGroup {security_group} "
+                    f"--withRoot "
+                    f"--allowList [r5*,r6*,r7*,m*] "
+                    f"-j {bind_script} "
+                    f"--hostInit {init_script} "
+                    f"--dirMap /mnt/efs:/mnt/efs "
+                    f"-n {job_name} "
+                    f"--dataVolume [mode=r,endpoint=s3.us-east-1.amazonaws.com]s3://statfungen/ftp_fgc_xqtl/resource/references/:/home/ubuntu/reference_data "
+                    f"--dataVolume [mode=r,endpoint=s3.us-east-1.amazonaws.com]s3://statfungen/ftp_fgc_xqtl/xqtl_protocol_data/:/home/ubuntu/xqtl_protocol_data "
+                    f"--dataVolume [mode=rw,endpoint=s3.us-east-1.amazonaws.com]s3://statfungen/ftp_fgc_xqtl/interactive_sessions/al4225/xqtl_protocol_project/{name_for_path}/:/home/ubuntu/xqtl_protocol_project "
+                    f"--env MODE=mount_packages "
+                    f"--env GRANT_SUDO=yes "
+                    f"--env VMUI=jupyter "
+                    f"--env EFS={efs} "
+                    f"--env PYDEVD_DISABLE_FILE_VALIDATION=1 "
+                    f"--env JUPYTER_RUNTIME_DIR=/tmp/jupyter_runtime "
+                    f"--env JUPYTER_ENABLE_LAB=TRUE "
+                    f"--env ALLOWABLE_IDLE_TIME_SECONDS=7200 "
+                    f"--imageVolSize 3 "
+                    f"--migratePolicy [disable=true,evadeOOM=false] "
+                    f"--gateway {gateway} "
+                    f"--publish 8888:8888 | grep 'id:' | awk -F'id: ' '{{print $2}}' | awk '{{print $1}}'"
                 )
 
                 job_id = subprocess.getoutput(command).strip()
@@ -106,11 +130,12 @@ def main():
     parser_submit = subparsers.add_parser('submit', help="Submit jobs and generate job IDs.")
     parser_submit.add_argument('input', type=str, help="Input CSV file with names (first and last name per line).")
     parser_submit.add_argument('output', type=str, help="Output CSV file with names and job IDs.")
-    parser_submit.add_argument('--bucket_access_key', type=str, required=True, help="Bucket access key.")
-    parser_submit.add_argument('--bucket_secret_key', type=str, required=True, help="Bucket secret key.")
-    parser_submit.add_argument('--gateway', type=str, default='g-9xahbrb5rkbs0ic8yzylk', help="Gateway ID.")
+    parser_submit.add_argument('--gateway', type=str, default='g-sidlpgb7oi9p48kxycpmn', help="Gateway ID.")
     parser_submit.add_argument('--security_group', type=str, default='sg-02867677e76635b25', help="Security group ID.")
-    parser_submit.add_argument('--image', type=str, default='yiweizh/rockefeller-jupyter', help="Docker image name.")
+    parser_submit.add_argument('--opcenter', type=str, required=True, help="OpCenter address (e.g., 44.222.241.133).")
+    parser_submit.add_argument('--bind_script', type=str, required=True, help="Path to bind mount script.")
+    parser_submit.add_argument('--init_script', type=str, required=True, help="Path to host init script.")
+    parser_submit.add_argument('--efs', type=str, required=True, help="EFS configuration string.")
     parser_submit.set_defaults(func=submit)
 
     # Get URL command
@@ -129,5 +154,4 @@ def main():
     args.func(args)
 
 if __name__ == '__main__':
-    main() 
-
+    main()
