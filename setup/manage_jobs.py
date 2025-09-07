@@ -34,6 +34,14 @@ def submit(args):
                 # Create a lowercase version for the dataVolume path
                 name_for_path = name.replace(' ', '_').lower()
 
+                # Determine SUSPEND_FEATURE and ALLOWABLE_IDLE_TIME_SECONDS based on auto_suspension_interval
+                if auto_suspension_interval > 0:
+                    suspend_feature = "true"
+                    idle_time_env = f"--env ALLOWABLE_IDLE_TIME_SECONDS={auto_suspension_interval} "
+                else:
+                    suspend_feature = "false"
+                    idle_time_env = "--env ALLOWABLE_IDLE_TIME_SECONDS= "
+
                 command = (
                     f"yes | float submit -a {opcenter} "
                     f"-i ghcr.io/statfungen/tmate-minimal "
@@ -55,7 +63,8 @@ def submit(args):
                     f"--env PYDEVD_DISABLE_FILE_VALIDATION=1 "
                     f"--env JUPYTER_RUNTIME_DIR=/tmp/jupyter_runtime "
                     f"--env JUPYTER_ENABLE_LAB=TRUE "
-                    f"--env ALLOWABLE_IDLE_TIME_SECONDS={auto_suspension_interval} "
+                    f"{idle_time_env}"
+                    f"--env SUSPEND_FEATURE={suspend_feature} "
                     f"--imageVolSize 3 "
                     f"--migratePolicy [disable=true,evadeOOM=false] "
                     f"--gateway {gateway} "
