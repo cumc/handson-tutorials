@@ -61,7 +61,7 @@ The purpose of this job is to setup packages. **Once you are done with the setup
         --efs fs-079aa80256bc0f111.fsx.us-east-1.amazonaws.com@tcp:/is37vb4v \
         --bind_script ~/GIT/github/mmcloud/src/bind_mount.sh \
         --init_script ~/GIT/github/mmcloud/src/host_init.sh \
-        --entrypoint_script course_entrypoint.sh \
+        --entrypoint_script_url https://raw.githubusercontent.com/cumc/handson-tutorials/refs/heads/main/setup/course_entrypoint.sh \
         --auto_suspension_interval 518400 # 6 days in seconds
         ``` 
         - This step will generate a `csv` file that have two columns, Name and Job ID.

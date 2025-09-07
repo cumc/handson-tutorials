@@ -21,7 +21,7 @@ def submit(args):
     init_script = args.init_script
     efs = args.efs
     auto_suspension_interval = args.auto_suspension_interval
-    entrypoint_script = args.entrypoint_script
+    entrypoint_script = args.entrypoint_script_url
 
     try:
         with open(input_file, 'r') as infile, open(output_file, 'w', newline='') as outfile:
@@ -64,7 +64,7 @@ def submit(args):
                 
                 # Add entrypoint script if specified
                 if entrypoint_script:
-                    command += f"--env ENTRYPOINT={entrypoint_script} "
+                    command += f" --env ENTRYPOINT={entrypoint_script} "
 
                 # Use subprocess.getoutput to get the full output (stdout + stderr)
                 full_output = subprocess.getoutput(command)
@@ -182,8 +182,8 @@ def main():
     parser_submit.add_argument('--opcenter', type=str, required=True, help="OpCenter address (e.g., 44.222.241.133).")
     parser_submit.add_argument('--bind_script', type=str, required=True, help="Path to bind mount script.")
     parser_submit.add_argument('--init_script', type=str, required=True, help="Path to host init script.")
-    parser_submit.add_argument('--entrypoint_script', type=str, default=None, 
-                               help="Optional entrypoint script path to set as ENTRYPOINT environment variable.")
+    parser_submit.add_argument('--entrypoint_script_url', type=str, default=None, 
+                               help="Optional entrypoint script URL to set as ENTRYPOINT environment variable.")
     parser_submit.add_argument('--efs', type=str, required=True, help="EFS configuration string.")
     parser_submit.add_argument('--auto_suspension_interval', type=int, default=25200, 
                                help="Auto suspension interval in seconds (default: 25200 = 7 hours).")
