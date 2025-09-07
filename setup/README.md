@@ -91,10 +91,40 @@ The purpose of this job is to setup packages. **Once you are done with the setup
         python manage_jobs.py manage <suspend/resume/cancel> shenzhen_2025.csv
         ```
 
-### Maintaing the servers
+### Maintaining the servers
 
 For Maintenance especially when on low budget,
 - After everything is setup and tested, we should keep all the instances suspended
 - Right before lab session, we resume all instances
 - Right after the lab session ends, we suspend again
 - If anyone has an issue with their server for whatever reason, we will need to start a new one for him/her (submit job and add a line to the CSV file), and cancel the old one that no longer works.
+
+## Setup for FunGen-xQTL protocol on StatFunGen bucket
+
+To do so, we need to change `manage_job.py` data volume mount into the following:
+
+```python
+f"--dataVolume [mode=r,endpoint=s3.us-east-1.amazonaws.com]s3://statfungen/ftp_fgc_xqtl/resource/references/:/home/ubuntu/reference_data "
+f"--dataVolume [mode=r,endpoint=s3.us-east-1.amazonaws.com]s3://statfungen/ftp_fgc_xqtl/xqtl_protocol_data/:/home/ubuntu/xqtl_protocol_data "
+f"--dataVolume [mode=rw,endpoint=s3.us-east-1.amazonaws.com]s3://statfungen/ftp_fgc_xqtl/interactive_sessions/xqtl_protocol_exercise/{name_for_path}/:/home/ubuntu/xqtl_protocol_exercise "                    
+```
+and create an entrypoint file along the lines of:
+
+```bash
+mkdir -p /home/ubuntu/xqtl_protocol_exercise
+
+cd /home/ubuntu/xqtl_protocol_exercise
+
+# create symbolic link if not exists
+[ ! -e data ] && ln -s /home/ubuntu/xqtl_protocol_data/data/ data
+[ ! -e pecotmr ] && ln -s /home/ubuntu/xqtl_protocol_data/github/pecotmr/ pecotmr
+[ ! -e pipeline ] && ln -s /home/ubuntu/xqtl_protocol_data/github/xqtl-protocol/pipeline/ pipeline
+[ ! -e reference_data ] && ln -s /home/ubuntu/reference_data/ reference_data
+[ ! -e output_precomputed ] && ln -s /home/ubuntu/xqtl_protocol_data/output/ output_precomputed
+# copy necessary inputs
+if [ ! -d output/rnaseq ]; then
+    mkdir output
+    mkdir output/rnaseq/
+    cp -r /home/ubuntu/xqtl_protocol_data/output/rnaseq/ output/
+fi
+```
