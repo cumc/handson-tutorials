@@ -5,8 +5,8 @@ import subprocess
 import re
 import sys
 import logging
-import tempfile
-import os
+import time
+import os  
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -17,31 +17,9 @@ def submit(args):
     gateway = args.gateway
     security_group = args.security_group
     opcenter = args.opcenter
-    bind_scripts = args.bind_scripts
+    bind_script = args.bind_script
     init_script = args.init_script
     efs = args.efs
-
-    # Combine all bind scripts into one temporary file
-    try:
-        combined_script_content = []
-        for script_path in bind_scripts:
-            with open(script_path, 'r') as script_file:
-                script_content = script_file.read().strip()
-                combined_script_content.append(script_content)
-                logging.info(f"Loaded script: {script_path}")
-        
-        # Join scripts with empty lines
-        combined_content = '\n\n'.join(combined_script_content)
-        
-        # Create temporary file for the combined script
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.sh', delete=False) as temp_script:
-            temp_script.write(combined_content)
-            temp_script_path = temp_script.name
-            logging.info(f"Created combined script at: {temp_script_path}")
-
-    except Exception as e:
-        logging.error(f"Error combining bind scripts: {e}")
-        sys.exit(1)
 
     try:
         with open(input_file, 'r') as infile, open(output_file, 'w', newline='') as outfile:
@@ -55,53 +33,74 @@ def submit(args):
                 name_for_path = name.replace(' ', '_').lower()
 
                 command = (
-                    f"float submit -a {opcenter} "
+                    f"yes | float submit -a {opcenter} "
                     f"-i ghcr.io/statfungen/tmate-minimal "
                     f"-c 2 -m 16 "
                     f"--vmPolicy [onDemand=true] "
                     f"--securityGroup {security_group} "
                     f"--withRoot "
                     f"--allowList [r5*,r6*,r7*,m*] "
-                    f"-j {temp_script_path} "
+                    f"-j {bind_script} "
                     f"--hostInit {init_script} "
                     f"--dirMap /mnt/efs:/mnt/efs "
                     f"-n {job_name} "
-                    f"--dataVolume [mode=r,endpoint=s3.us-east-1.amazonaws.com]s3://statfungen/ftp_fgc_xqtl/resource/references/:/home/ubuntu/reference_data "
-                    f"--dataVolume [mode=r,endpoint=s3.us-east-1.amazonaws.com]s3://statfungen/ftp_fgc_xqtl/xqtl_protocol_data/:/home/ubuntu/xqtl_protocol_data "
-                    f"--dataVolume [mode=rw,endpoint=s3.us-east-1.amazonaws.com]s3://statfungen/ftp_fgc_xqtl/interactive_sessions/al4225/xqtl_protocol_project/{name_for_path}/:/home/ubuntu/xqtl_protocol_project "
-                    f"--env MODE=mount_packages "
+                    f"--dataVolume [mode=r,endpoint=s3.us-east-1.amazonaws.com]s3://rockefeller-course/AGIS/:/home/ubuntu/raw_data/ "
+                    f"--dataVolume [mode=rw,endpoint=s3.us-east-1.amazonaws.com]s3://rockefeller-course/advstatgen_2025/{name_for_path}/:/home/ubuntu/handson-tutorials/ "
+                    f"--env MODE=oem_packages "
                     f"--env GRANT_SUDO=yes "
                     f"--env VMUI=jupyter "
                     f"--env EFS={efs} "
                     f"--env PYDEVD_DISABLE_FILE_VALIDATION=1 "
                     f"--env JUPYTER_RUNTIME_DIR=/tmp/jupyter_runtime "
                     f"--env JUPYTER_ENABLE_LAB=TRUE "
-                    f"--env ALLOWABLE_IDLE_TIME_SECONDS=7200 "
+                    f"--env ALLOWABLE_IDLE_TIME_SECONDS=25200 "
                     f"--imageVolSize 3 "
                     f"--migratePolicy [disable=true,evadeOOM=false] "
                     f"--gateway {gateway} "
-                    f"--publish 8888:8888 | grep 'id:' | awk -F'id: ' '{{print $2}}' | awk '{{print $1}}'"
+                    f"--publish 8888:8888"
                 )
 
-                job_id = subprocess.getoutput(command).strip()
-                writer.writerow([name, job_id])
-                logging.info(f"Submitted job for {name} with Job ID: {job_id}")
-
+                # Use subprocess.getoutput to get the full output (stdout + stderr)
+                full_output = subprocess.getoutput(command)
+                
+                # Extract job ID from the output
+                job_id = None
+                
+                # Look for 'id:' pattern first
+                id_match = re.search(r'id:\s*(\S+)', full_output)
+                if id_match:
+                    job_id = id_match.group(1)
+                else:
+                    # Fallback: look for the last line that looks like a job ID
+                    lines = full_output.strip().split('\n')
+                    for line in reversed(lines):
+                        line = line.strip()
+                        # Job IDs are typically alphanumeric strings longer than 15 characters
+                        if (line and 
+                            not line.startswith('Warning') and 
+                            not line.startswith('Login') and
+                            not 'region' in line.lower() and
+                            len(line) > 15 and 
+                            re.match(r'^[a-zA-Z0-9]+$', line)):
+                            job_id = line
+                            break
+                
+                if job_id:
+                    writer.writerow([name, job_id])
+                    logging.info(f"Submitted job for {name} with Job ID: {job_id}")
+                else:
+                    logging.error(f"Failed to extract job ID for {name}")
+                    logging.error(f"Full output: {full_output}")
+                    
     except Exception as e:
         logging.error(f"Error in submit function: {e}")
         sys.exit(1)
-    finally:
-        # Clean up the temporary file
-        try:
-            os.unlink(temp_script_path)
-            logging.info(f"Cleaned up temporary script: {temp_script_path}")
-        except Exception as e:
-            logging.warning(f"Could not clean up temporary file {temp_script_path}: {e}")
 
 def get_url(args):
     input_file = args.input
     output_file = args.output
-
+    base_url = args.base_url
+    output_address = []
     try:
         with open(input_file, 'r') as infile, open(output_file, 'w', newline='') as outfile:
             reader = csv.reader(infile)
@@ -119,11 +118,20 @@ def get_url(args):
                 new_url = f"http://{ip_address}/{token}"
 
                 writer.writerow([name, new_url, job_id])
+                output_address.append([name, os.path.join(base_url, name.lower().replace(' ', '_'))])
                 logging.info(f"Retrieved URL for {name}: {new_url}")
-            writer.writerow([]) # need an empty row at the end, for GitHub Action to easily consolidate multiple lists to generate gh-pages
     except Exception as e:
         logging.error(f"Error in get_url function: {e}")
         sys.exit(1)
+    # save output_address to a separate xlsx file
+    try:
+        import pandas as pd
+        df = pd.DataFrame(output_address, columns=['Name', 'URL'])
+        # remove the current extension and add .xlsx as the new extension
+        df.to_excel(os.path.splitext(output_file)[0] + '.xlsx', index=False)
+        logging.info("Saved interactive session job links to .xlsx")
+    except ImportError:
+        logging.warning("pandas not installed, skipping saving to xlsx file.")
 
 def manage(args):
     action = args.action
@@ -166,7 +174,7 @@ def main():
     parser_submit.add_argument('--gateway', type=str, default='g-sidlpgb7oi9p48kxycpmn', help="Gateway ID.")
     parser_submit.add_argument('--security_group', type=str, default='sg-02867677e76635b25', help="Security group ID.")
     parser_submit.add_argument('--opcenter', type=str, required=True, help="OpCenter address (e.g., 44.222.241.133).")
-    parser_submit.add_argument('--bind_scripts', type=str, nargs='+', required=True, help="Paths to bind mount scripts (multiple scripts will be combined).")
+    parser_submit.add_argument('--bind_script', type=str, required=True, help="Path to bind mount script.")
     parser_submit.add_argument('--init_script', type=str, required=True, help="Path to host init script.")
     parser_submit.add_argument('--efs', type=str, required=True, help="EFS configuration string.")
     parser_submit.set_defaults(func=submit)
@@ -175,7 +183,9 @@ def main():
     parser_get_url = subparsers.add_parser('get_url', help="Retrieve URLs for submitted jobs.")
     parser_get_url.add_argument('input', type=str, help="Input CSV file from the submit command.")
     parser_get_url.add_argument('output', type=str, help="Output CSV file with names, URLs, and job IDs.")
+    parser_get_url.add_argument('--base_url', type=str, default='https://statgenetics.github.io/statgen-courses/', help="Base URL for interactive session job links.")
     parser_get_url.set_defaults(func=get_url)
+    
 
     # Manage command
     parser_manage = subparsers.add_parser('manage', help="Manage jobs (suspend, resume, or cancel).")
