@@ -2,46 +2,7 @@
 
 For more detailed explanation of the setup, you can refer [to the documentation here](https://wanggroup.org/productivity_tips/mmcloud-interactive).
 
-## Setup EFS for Package Installation (one-time setup)
-
-Assuming that 
-
-- The gateway has been set up in the Opcenter.
-- The security group for port 8888 is created in the AWS console.
-- The EFS has been created
-
-### Start a `tmate` session in `admin` mode
-
-1. Follow the instructions here [to access a tmate session for installing the OEM packages](https://wanggroup.org/productivity_tips/mmcloud-admin-notes#install-oem-packages). Briefly, run the command below to start a `tmate` session in `admin` mode, which will allow you to install packages as an admin for all other users to access as shared packages. Fill in the necessary parameters that are encapsulated in `<>`.
-
-```bash
-bash mm_interactive.sh -ide tmate --oem-admin
-```
-
-When prompted, input your account details: your OpCenter username and password. Then, a connection to the interactive session will be established from your shell terminal. You will see the below message. Just type `y` and enter to continue.
-
-```
-NOTICE: tmate sessions are primarily designed for initial package configuration.
-For regular development work, we recommend utilizing a more advanced Integrated Development Environment (IDE)
-via the -ide option, if you have previously set up an alternative IDE.
-Do you wish to proceed with the tmate session? (y/N): y
-```
-
-A few minutes later, you should see the output:
-
-```bash
-To access the server, copy this URL into a browser: ...
-```
-
-or
-
-```bash
-SSH session: ...
-```
-
-Copy the URL into your web browser. For the SSH session, you may copy that into your terminal.
-
-### Install software in `admin` mode
+### Install software in `oem` mode
 
 Upon accessing the tmate session, you may now install packages directly into the EFS. Please run the command below to get started on installing the initial packages.
 ``` bash
@@ -64,12 +25,12 @@ The purpose of this job is to setup packages. **Once you are done with the setup
 
 ### Overview
 
-- For a list of student names (in English) we will run a some commands (see below) to generate a file [like this](https://github.com/statgenetics/statgen-courses/blob/master/.github/workflows/rockefeller_2024.csv) and send a PR to that folder. It can be any name but should have `csv` format and extension. **The last line of this file should be an empty line**.
+- For a list of student names (in English) we will run a some commands (see below) to generate a file [like this](https://github.com/statgenetics/statgen-courses/blob/master/.github/workflows/rockefeller_2024.csv) and send a PR to that folder. It can be any name but should have `csv` format and extension.
 - A couple of minutes after the PR is accepted, test if for a student listed in the CSV file, the corresponding server is avaiable as `https://statgenetics.github.io/statgen-courses/<firstname_lastname>`
 
 ### Setting up servers
 
-- To set up servers, you will need to use a script [like this](https://github.com/cumc/handson-tutorials/blob/main/setup/manage_jobs.py) to submit jobs to cloud at the same time.
+- To set up servers, you will need to use [this script]](https://github.com/cumc/handson-tutorials/blob/main/setup/manage_jobs.py) to submit jobs to cloud at the same time.
 - Also, a list of student names will need to be proveide, showing as following:
   ```
   Wang Chao
@@ -87,18 +48,21 @@ The purpose of this job is to setup packages. **Once you are done with the setup
         --security_group <security_group_id> \
         --efs <efs_mount_point> \
         --bind_script <path_to_bind_mount.sh> \
-        --init_script <path_to_host_init.sh>
+        --init_script <path_to_host_init.sh> \
+        --entrypoint_script <path_to_entrypoint.sh>
 
         ```
-        For example
+        where `bind_script` and `init_script` are available [here](https://github.com/statfungen/mmcloud/tree/main/src). `entrypoint_script` can be found in this folder. As an example:
         ```
         python manage_jobs.py submit students.csv students_submit.csv \
         --opcenter 44.222.241.133 \
         --gateway g-sidlpgb7oi9p48kxycpmn \
         --security_group sg-02867677e76635b25 \
         --efs fs-079aa80256bc0f111.fsx.us-east-1.amazonaws.com@tcp:/is37vb4v \
-        --bind_script /home/anjing/GIT/github/mmcloud/src/bind_mount.sh --init_script /home/anjing/GIT/github/mmcloud/src/host_init.sh
-
+        --bind_script ~/GIT/github/mmcloud/src/bind_mount.sh \
+        --init_script ~/GIT/github/mmcloud/src/host_init.sh \
+        --entrypoint_script course_entrypoint.sh \
+        --auto_suspension_interval 518400 # 6 days in seconds
         ``` 
         - This step will generate a `csv` file that have two columns, Name and Job ID.
         ```

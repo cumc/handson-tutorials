@@ -20,6 +20,8 @@ def submit(args):
     bind_script = args.bind_script
     init_script = args.init_script
     efs = args.efs
+    auto_suspension_interval = args.auto_suspension_interval
+    entrypoint_script = args.entrypoint_script
 
     try:
         with open(input_file, 'r') as infile, open(output_file, 'w', newline='') as outfile:
@@ -53,12 +55,16 @@ def submit(args):
                     f"--env PYDEVD_DISABLE_FILE_VALIDATION=1 "
                     f"--env JUPYTER_RUNTIME_DIR=/tmp/jupyter_runtime "
                     f"--env JUPYTER_ENABLE_LAB=TRUE "
-                    f"--env ALLOWABLE_IDLE_TIME_SECONDS=25200 "
+                    f"--env ALLOWABLE_IDLE_TIME_SECONDS={auto_suspension_interval} "
                     f"--imageVolSize 3 "
                     f"--migratePolicy [disable=true,evadeOOM=false] "
                     f"--gateway {gateway} "
                     f"--publish 8888:8888"
                 )
+                
+                # Add entrypoint script if specified
+                if entrypoint_script:
+                    command += f"--env ENTRYPOINT={entrypoint_script} "
 
                 # Use subprocess.getoutput to get the full output (stdout + stderr)
                 full_output = subprocess.getoutput(command)
@@ -176,7 +182,11 @@ def main():
     parser_submit.add_argument('--opcenter', type=str, required=True, help="OpCenter address (e.g., 44.222.241.133).")
     parser_submit.add_argument('--bind_script', type=str, required=True, help="Path to bind mount script.")
     parser_submit.add_argument('--init_script', type=str, required=True, help="Path to host init script.")
+    parser_submit.add_argument('--entrypoint_script', type=str, default=None, 
+                               help="Optional entrypoint script path to set as ENTRYPOINT environment variable.")
     parser_submit.add_argument('--efs', type=str, required=True, help="EFS configuration string.")
+    parser_submit.add_argument('--auto_suspension_interval', type=int, default=25200, 
+                               help="Auto suspension interval in seconds (default: 25200 = 7 hours).")
     parser_submit.set_defaults(func=submit)
 
     # Get URL command
