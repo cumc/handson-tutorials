@@ -50,8 +50,7 @@ The purpose of this job is to setup packages. **Once you are done with the setup
         --efs <efs_mount_point> \
         --bind_script <path_to_bind_mount.sh> \
         --init_script <path_to_host_init.sh> \
-        --entrypoint_script <path_to_entrypoint.sh>
-
+        --entrypoint_script_url <url_to_entrypoint.sh>
         ```
         where `bind_script` and `init_script` are available [here](https://github.com/statfungen/mmcloud/tree/main/src). `entrypoint_script` can be found in this folder. As an example:
         ```
