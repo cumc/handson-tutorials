@@ -31,7 +31,7 @@ The purpose of this job is to setup packages. **Once you are done with the setup
 
 ### Setting up servers
 
-- To set up servers, you will need to use [this script]](https://github.com/cumc/handson-tutorials/blob/main/setup/manage_jobs.py) to submit jobs to cloud at the same time.
+- To set up servers, you will need to use [this script](https://github.com/cumc/handson-tutorials/blob/main/setup/manage_jobs.py) to submit jobs to cloud at the same time.
 - Also, a list of student names will need to be proveide, showing as following:
   ```
   Wang Chao
