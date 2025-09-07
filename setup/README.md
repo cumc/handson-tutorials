@@ -1,10 +1,11 @@
 # How to setup tutorial servers on MMCloud
 
-For more detailed explanation of the setup, you can refer [to the documentation here](https://wanggroup.org/productivity_tips/mmcloud-interactive).
+For more detailed explanation of the setup, you can refer [to the documentation here]([https://wanggroup.org/productivity_tips/mmcloud-interactive](https://wanggroup.org/productivity_tips/mmcloud-admin-notes#install-oem-packages)).
 
 ### Install software in `oem` mode
 
-Upon accessing the tmate session, you may now install packages directly into the EFS. Please run the command below to get started on installing the initial packages.
+Using `--oem-admin` mode (see link above), upon accessing the tmate session, you may now install packages directly into the EFS. Please run the command below to get started on installing the initial packages.
+
 ``` bash
 curl -fsSL https://raw.githubusercontent.com/StatFunGen/misc/master/bash/pixi/pixi-setup.sh | bash
 ```
