@@ -91,7 +91,7 @@ python create_student_folders.py <students.csv>
         --init_script <path_to_host_init.sh> \
         --entrypoint_script_url <url_to_entrypoint.sh>
         ```
-        where `bind_script` and `init_script` are available [here](https://github.com/statfungen/mmcloud/tree/main/src). `entrypoint_script` can be found in this folder. As an example:
+        where `bind_script` and `init_script` are available [here](https://github.com/statfungen/mmcloud/tree/main/src). `entrypoint_script` can be found in the current folder. As an example:
         ```
         python manage_jobs.py submit students.csv students_submit.csv \
         --opcenter 44.222.241.133 \
@@ -130,8 +130,6 @@ python create_student_folders.py <students.csv>
         ```
         python manage_jobs.py manage <suspend/resume/cancel> shenzhen_2025.csv
         ```
-
-
 
 ### Maintaining the VMs
 
