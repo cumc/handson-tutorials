@@ -9,9 +9,9 @@ import os
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def create_s3_folder(bucket_path):
-    """使用 aws s3 命令创建 S3 文件夹"""
+    # use AWS S3 commands to create a folder
     try:
-        # 创建一个空的 .keep 文件来确保目录存在
+        # create an empty .keep file in the specified S3 path
         command = [
             "aws", "s3", "cp", "-", f"s3://{bucket_path}/.keep",
             "--region", "us-east-1"
@@ -34,8 +34,7 @@ def create_s3_folder(bucket_path):
 
 
 def create_student_directories(students_csv, base_path="srockefeller-course/advstatgen_2025"):
-    """为学生列表中的每个学生创建个人目录"""
-    
+    # create individual student directories for every student
     success_count = 0
     failed_count = 0
     
